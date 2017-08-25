@@ -1,0 +1,12 @@
+hash: 683b7ae809be342c19667f91424b9de5bc41f3c53184ec90a40e3ef9a77234f9
+updated: 2017-08-24T21:45:42.032504322+03:00
+imports:
+- name: github.com/go-pg/pg
+  version: 3b0eccfa10f93b9e49edb9d44c363fa6b05527f4
+- name: github.com/go-telegram-bot-api/telegram-bot-api
+  version: 9dda67c714e5e2cba837b28a0172cca2ed54f078
+- name: github.com/nicksnyder/go-i18n
+  version: 3e70a1a463008cea6726380c908b1a6a8bdf7b24
+  subpackages:
+  - goi18n
+testImports: []

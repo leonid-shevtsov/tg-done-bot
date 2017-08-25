@@ -1,0 +1,9 @@
+package: leonid.shevtsov.me/gtd_bot
+import:
+- package: github.com/go-pg/pg
+  version: ~6.4.21
+- package: github.com/go-telegram-bot-api/telegram-bot-api
+- package: github.com/nicksnyder/go-i18n
+  version: ^1.8.1
+  subpackages:
+  - goi18n
