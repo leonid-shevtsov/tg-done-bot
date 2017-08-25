@@ -8,11 +8,11 @@ import (
 )
 
 // FIXME
-const processInboxCommand = "p"
-const yesCommand = "y"
-const noCommand = "n"
-const abortCommand = "a"
-const trashGoalCommand = "t"
+const processInboxCommand = "Process inbox"
+const yesCommand = "Yes"
+const noCommand = "No - trash it"
+const abortCommand = "Let's do this later"
+const trashGoalCommand = "Let's just trash it"
 
 func abortProcessing(user *telegram.User) {
 	abortText := fmt.Sprintf("OK. Items left to process: %d. Feel free to brain dump.", inboxCount(user.ID))
