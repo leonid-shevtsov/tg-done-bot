@@ -1,57 +1,59 @@
 package gtd_bot
 
 import (
-	"fmt"
+	"time"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-var isItActionableKeyboard = telegram.ReplyKeyboardMarkup{
-	Keyboard: [][]telegram.KeyboardButton{
-		[]telegram.KeyboardButton{{Text: yesCommand}, {Text: noCommand}, {Text: abortCommand}},
-	},
-	ResizeKeyboard:  true,
-	OneTimeKeyboard: true,
+const yesCommand = "Yes"
+const noCommand = "No - trash it"
+const abortCommand = "Let's do this later"
+
+var isItActionableKeyboard = [][]telegram.KeyboardButton{
+	[]telegram.KeyboardButton{{Text: yesCommand}, {Text: noCommand}, {Text: abortCommand}},
 }
 
-func gotoProcessInbox(user *telegram.User) bool {
-	return gotoIsItActionable(user)
+func (i *interaction) gotoProcessInbox() bool {
+	return i.gotoIsItActionable()
 }
 
-func gotoIsItActionable(user *telegram.User) bool {
-	var inboxItemsToProcess []InboxItem
-	err := db.Model(&inboxItemsToProcess).
-		Where("user_id = ? AND processed_at IS NULL", user.ID).
-		Order("created_at ASC").
-		Limit(1).
-		Select()
-	if err != nil {
-		panic(err)
-	}
-	if len(inboxItemsToProcess) > 0 {
-		inboxItemToProcess := inboxItemsToProcess[0]
-		startProcessingInbox(user.ID, inboxItemToProcess.ID)
-		responseText := fmt.Sprintf("*Processing item:*\n\n%s\n\n*Is this actionable?*", inboxItemToProcess.Text)
-		msg := telegram.NewMessage(int64(user.ID), responseText)
-		msg.ParseMode = telegram.ModeMarkdown
-		msg.ReplyMarkup = isItActionableKeyboard
-		bot.Send(msg)
+func (i *interaction) gotoIsItActionable() bool {
+	if inboxItemToProcess := i.repo.inboxItemToProcess(i.user.ID); inboxItemToProcess != nil {
+		i.user.State = int(isItActionableState)
+		i.user.CurrentInboxItemID = inboxItemToProcess.ID
+		i.repo.update(i.user)
+
+		i.sendMessage("Processing inbox item:")
+		i.sendMessage(inboxItemToProcess.Text)
+		i.sendPrompt("Is it actionable?", isItActionableKeyboard)
 		return true
 	} else {
-		bot.Send(telegram.NewMessage(int64(user.ID), "Inbox zero!"))
+		i.sendMessage("Inbox zero!")
 		return false
 	}
 }
 
-func handleIsItActionableState(message *telegram.Message) {
-	switch message.Text {
+func (i *interaction) handleIsItActionable() {
+	switch i.message.Text {
 	case yesCommand:
-		gotoWhatIsTheGoal(message.From)
+		i.gotoWhatIsTheGoal()
 	case noCommand:
-		trashCurrentInboxItem(message.From)
+		i.trashCurrentInboxItem()
 	case abortCommand:
-		abortProcessing(message.From)
+		i.abortProcessing()
 	default:
-		sendUnclearCommand(message.From, isItActionableKeyboard)
+		i.sendUnclear()
+		i.sendPrompt("Is it actionable?", isItActionableKeyboard)
+	}
+}
+
+func (i *interaction) trashCurrentInboxItem() {
+	i.user.CurrentInboxItem.ProcessedAt = time.Now()
+	i.repo.update(i.user.CurrentInboxItem)
+
+	i.sendMessage("Trashed! Moving on.")
+	if !i.gotoProcessInbox() {
+		i.gotoInitialState()
 	}
 }

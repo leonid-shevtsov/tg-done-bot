@@ -7,10 +7,8 @@ import (
 	"github.com/go-pg/pg"
 )
 
-var db *pg.DB
-
-func DBConnect() {
-	db = pg.Connect(&pg.Options{
+func DBConnect() *pg.DB {
+	db := pg.Connect(&pg.Options{
 		Database: "gtd_bot",
 		User:     "postgres",
 		Addr:     ":5433",
@@ -23,14 +21,15 @@ func DBConnect() {
 
 		log.Printf("%s %s", time.Since(event.StartTime), query)
 	})
-	// err := createSchema(db)
-	// if err != nil {
-	// 	panic(err)
-	// }
+	err := createSchema(db)
+	if err != nil {
+		panic(err)
+	}
+	return db
 }
 
 func createSchema(db *pg.DB) error {
-	for _, model := range []interface{}{&InboxItem{}, &UserState{}} {
+	for _, model := range []interface{}{&InboxItem{}, &User{}, &Goal{}, &Action{}} {
 		err := db.CreateTable(model, nil)
 		if err != nil {
 			return err

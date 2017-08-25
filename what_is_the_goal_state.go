@@ -1,54 +1,47 @@
 package gtd_bot
 
 import (
-	"time"
+	"fmt"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func gotoWhatIsTheGoal(user *telegram.User) {
-	setUserState(user.ID, whatIsTheGoalState)
-	msg := telegram.NewMessage(int64(user.ID), "What is the goal here?")
-	msg.ReplyMarkup = telegram.ReplyKeyboardMarkup{
-		Keyboard: [][]telegram.KeyboardButton{
-			[]telegram.KeyboardButton{{Text: trashGoalCommand}, {Text: abortCommand}},
-		},
-		ResizeKeyboard:  true,
-		OneTimeKeyboard: true,
-	}
-	bot.Send(msg)
+const trashGoalCommand = "Let's just trash it"
+
+var whatIsTheGoalKeyboard = [][]telegram.KeyboardButton{
+	[]telegram.KeyboardButton{{Text: trashGoalCommand}, {Text: abortCommand}},
 }
 
-func handleWhatIsTheGoalState(message *telegram.Message) {
-	switch message.Text {
+func (i *interaction) gotoWhatIsTheGoal() {
+	i.user.State = int(whatIsTheGoalState)
+	i.repo.update(i.user)
+	i.sendPrompt("What is the goal here?", whatIsTheGoalKeyboard)
+}
+
+func (i *interaction) handleWhatIsTheGoal() {
+	switch i.message.Text {
 	case trashGoalCommand:
-		trashCurrentInboxItem(message.From)
+		i.trashCurrentInboxItem()
 	case abortCommand:
-		abortProcessing(message.From)
+		i.abortProcessing()
 	default:
-		createGoal(message)
-		gotoWhatIsTheNextAction(message.From)
+		i.createGoal()
+		i.gotoWhatIsTheNextAction()
 	}
 }
 
-func createGoal(message *telegram.Message) {
-	goal := Goal{
-		UserID:    message.From.ID,
-		Text:      message.Text,
-		CreatedAt: time.Now(),
+func (i *interaction) createGoal() {
+	goal := &Goal{
+		UserID: i.user.ID,
+		Text:   i.message.Text,
 	}
-	_, err := db.Model(&goal).Insert()
-	if err != nil {
-		panic(err)
-	}
-	_, err = db.Model(&UserState{
-		UserID:        message.From.ID,
-		CurrentGoalID: goal.ID,
-	}).
-		Set("current_goal_id = ?current_goal_id").
-		Where("user_id = ?user_id").
-		Update()
-	if err != nil {
-		panic(err)
-	}
+	i.repo.insert(goal)
+	i.user.CurrentGoalID = goal.ID
+	i.repo.update(i.user)
+}
+
+func (i *interaction) abortProcessing() {
+	abortText := fmt.Sprintf("OK. Items left to process: %d.", i.inboxCount())
+	i.sendMessage(abortText)
+	i.gotoInitialState()
 }

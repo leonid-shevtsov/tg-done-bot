@@ -4,14 +4,12 @@ import (
 	"log"
 	"os"
 
+	"github.com/go-pg/pg"
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-var bot *telegram.BotAPI
-
-func RunBot() {
-	var err error
-	bot, err = telegram.NewBotAPI(os.Getenv("BOT_TOKEN"))
+func RunBot(db *pg.DB) {
+	bot, err := telegram.NewBotAPI(os.Getenv("BOT_TOKEN"))
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -26,6 +24,7 @@ func RunBot() {
 		if update.Message == nil {
 			continue
 		}
-		handleMessage(update.Message)
+		interaction := newInteraction(db, bot, update.Message)
+		interaction.handleMessage()
 	}
 }

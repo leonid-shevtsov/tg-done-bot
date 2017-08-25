@@ -2,47 +2,44 @@ package gtd_bot
 
 import (
 	"fmt"
-	"time"
 
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-var initialStateKeyboard = telegram.ReplyKeyboardMarkup{
-	Keyboard: [][]telegram.KeyboardButton{
-		[]telegram.KeyboardButton{{Text: processInboxCommand}},
-	},
-	ResizeKeyboard:  true,
-	OneTimeKeyboard: true,
+const processInboxCommand = "Process inbox"
+
+var initialStateKeyboard = [][]telegram.KeyboardButton{
+	[]telegram.KeyboardButton{{Text: processInboxCommand}},
 }
 
-func gotoBackToInitialState(user *telegram.User, message string) {
-	setUserState(user.ID, initialState)
-	msg := telegram.NewMessage(int64(user.ID), message)
-	if inboxCount(user.ID) > 0 {
-		msg.ReplyMarkup = initialStateKeyboard
+func (i *interaction) gotoInitialState() {
+	i.user.State = int(initialState)
+	i.user.CurrentInboxItemID = 0
+	i.user.CurrentGoalID = 0
+	i.repo.update(i.user)
+
+	if i.inboxCount() > 0 {
+		i.sendPrompt("Back to collecting inbox.", initialStateKeyboard)
+	} else {
+		i.sendMessage("Back to collecting inbox.")
 	}
-	bot.Send(msg)
 }
 
-func handleInitialState(message *telegram.Message) {
-	switch message.Text {
+func (i *interaction) handleInitial() {
+	switch i.message.Text {
 	case processInboxCommand:
-		gotoProcessInbox(message.From)
+		i.gotoProcessInbox()
 	default:
-		addInboxItem(message.From, message.Text)
+		i.addInboxItem()
 	}
 }
 
-func addInboxItem(user *telegram.User, text string) {
-	inboxItem := InboxItem{
-		UserID:    user.ID,
-		Text:      text,
-		CreatedAt: time.Now(),
+func (i *interaction) addInboxItem() {
+	inboxItem := &InboxItem{
+		UserID: i.user.ID,
+		Text:   i.message.Text,
 	}
-	db.Insert(&inboxItem)
-
-	responseText := fmt.Sprintf("Added to inbox. Now in inbox: %d items.", inboxCount(user.ID))
-	msg := telegram.NewMessage(int64(user.ID), responseText)
-	msg.ReplyMarkup = initialStateKeyboard
-	bot.Send(msg)
+	i.repo.insert(inboxItem)
+	responseText := fmt.Sprintf("Added to inbox. Now in inbox: %d items.", i.inboxCount())
+	i.sendPrompt(responseText, initialStateKeyboard)
 }

@@ -1,6 +1,32 @@
 package gtd_bot
 
-import "time"
+import (
+	"time"
+
+	"github.com/go-pg/pg/orm"
+)
+
+type User struct {
+	ID                 int `sql:",pk"`
+	State              int `sql:",notnull"`
+	CurrentInboxItemID int
+	CurrentGoalID      int
+	CreatedAt          time.Time `sql:",notnull"`
+	LastMessageAt      time.Time `sql:",notnull"`
+
+	CurrentInboxItem *InboxItem
+	CurrentGoal      *Goal
+	InboxItems       []*InboxItem
+	Goals            []*Goal
+	Actions          []*Action
+}
+
+func (u *User) BeforeInsert(db orm.DB) error {
+	if u.CreatedAt.IsZero() {
+		u.CreatedAt = time.Now()
+	}
+	return nil
+}
 
 type InboxItem struct {
 	ID          int
@@ -8,17 +34,15 @@ type InboxItem struct {
 	Text        string    `sql:",notnull"`
 	CreatedAt   time.Time `sql:",notnull"`
 	ProcessedAt time.Time
+
+	User *User
 }
 
-type UserState struct {
-	UserID             int       `sql:",pk"`
-	LastMessageAt      time.Time `sql:",notnull"`
-	State              int       `sql:",notnull"`
-	CurrentInboxItemID int
-	CurrentGoalID      int
-
-	CurrentInboxItem *InboxItem
-	CurrentGoal      *Goal
+func (i *InboxItem) BeforeInsert(db orm.DB) error {
+	if i.CreatedAt.IsZero() {
+		i.CreatedAt = time.Now()
+	}
+	return nil
 }
 
 type Goal struct {
@@ -29,7 +53,15 @@ type Goal struct {
 	CompletedAt time.Time
 	DroppedAt   time.Time
 
+	User    *User
 	Actions []*Action
+}
+
+func (g *Goal) BeforeInsert(db orm.DB) error {
+	if g.CreatedAt.IsZero() {
+		g.CreatedAt = time.Now()
+	}
+	return nil
 }
 
 type Action struct {
@@ -40,14 +72,13 @@ type Action struct {
 	CreatedAt   time.Time `sql:",notnull"`
 	CompletedAt time.Time
 
+	User *User
 	Goal *Goal
 }
 
-type interactionState int
-
-const (
-	initialState = interactionState(iota)
-	isItActionableState
-	whatIsTheGoalState
-	whatIsTheNextActionState
-)
+func (a *Action) BeforeInsert(db orm.DB) error {
+	if a.CreatedAt.IsZero() {
+		a.CreatedAt = time.Now()
+	}
+	return nil
+}
