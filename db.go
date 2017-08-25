@@ -18,13 +18,12 @@ func DBConnect() *pg.DB {
 		if err != nil {
 			panic(err)
 		}
-
 		log.Printf("%s %s", time.Since(event.StartTime), query)
 	})
-	err := createSchema(db)
-	if err != nil {
-		panic(err)
-	}
+	// err := createSchema(db)
+	// if err != nil {
+	// 	panic(err)
+	// }
 	return db
 }
 

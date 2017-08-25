@@ -29,7 +29,7 @@ func (r *repo) finalizeTransaction() {
 func (r *repo) findUser(userID int) *User {
 	user := &User{ID: userID}
 	_, err := r.tx.Model(user).
-		Column("user.*", "CurrentInboxItem", "CurrentGoal").
+		Column("user.*", "CurrentInboxItem", "CurrentGoal", "CurrentAction").
 		SelectOrInsert()
 	if err != nil {
 		panic(err)

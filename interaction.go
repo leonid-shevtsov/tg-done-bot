@@ -14,6 +14,8 @@ const (
 	isItActionableState
 	whatIsTheGoalState
 	whatIsTheNextActionState
+	canYouDoItNowState
+	doItNowState
 )
 
 type interaction struct {
@@ -52,6 +54,12 @@ func (i *interaction) dispatchStateHandler() {
 		i.handleWhatIsTheGoal()
 	case whatIsTheNextActionState:
 		i.handleWhatIsTheNextAction()
+	case canYouDoItNowState:
+		i.handleCanYouDoItNow()
+	case doItNowState:
+		i.handleDoItNow()
+	default:
+		panic("bad state")
 	}
 }
 

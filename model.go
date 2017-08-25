@@ -11,11 +11,13 @@ type User struct {
 	State              int `sql:",notnull"`
 	CurrentInboxItemID int
 	CurrentGoalID      int
+	CurrentActionID    int
 	CreatedAt          time.Time `sql:",notnull"`
 	LastMessageAt      time.Time `sql:",notnull"`
 
 	CurrentInboxItem *InboxItem
 	CurrentGoal      *Goal
+	CurrentAction    *Action
 	InboxItems       []*InboxItem
 	Goals            []*Goal
 	Actions          []*Action

@@ -7,30 +7,27 @@ import (
 )
 
 const yesCommand = "Yes"
-const noCommand = "No - trash it"
+const noTrashItCommand = "No - trash it"
 const abortCommand = "Let's do this later"
 
 var isItActionableKeyboard = [][]telegram.KeyboardButton{
-	[]telegram.KeyboardButton{{Text: yesCommand}, {Text: noCommand}, {Text: abortCommand}},
+	[]telegram.KeyboardButton{{Text: yesCommand}, {Text: noTrashItCommand}, {Text: abortCommand}},
 }
 
-func (i *interaction) gotoProcessInbox() bool {
-	return i.gotoIsItActionable()
-}
-
-func (i *interaction) gotoIsItActionable() bool {
+func (i *interaction) gotoProcessInbox() {
 	if inboxItemToProcess := i.repo.inboxItemToProcess(i.user.ID); inboxItemToProcess != nil {
 		i.user.State = int(isItActionableState)
 		i.user.CurrentInboxItemID = inboxItemToProcess.ID
+		i.user.CurrentGoalID = 0
+
 		i.repo.update(i.user)
 
 		i.sendMessage("Processing inbox item:")
 		i.sendMessage(inboxItemToProcess.Text)
 		i.sendPrompt("Is it actionable?", isItActionableKeyboard)
-		return true
 	} else {
 		i.sendMessage("Inbox zero!")
-		return false
+		i.gotoInitialState()
 	}
 }
 
@@ -53,7 +50,5 @@ func (i *interaction) trashCurrentInboxItem() {
 	i.repo.update(i.user.CurrentInboxItem)
 
 	i.sendMessage("Trashed! Moving on.")
-	if !i.gotoProcessInbox() {
-		i.gotoInitialState()
-	}
+	i.gotoProcessInbox()
 }
