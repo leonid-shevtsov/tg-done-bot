@@ -6,10 +6,24 @@ import (
 	"time"
 
 	"github.com/go-pg/pg"
+	"github.com/mattes/migrate"
+	_ "github.com/mattes/migrate/database/postgres"
+	_ "github.com/mattes/migrate/source/file"
 )
 
 func DBConnect() *pg.DB {
 	dbURL := os.Getenv("DATABASE_URL")
+
+	m, err := migrate.New("file://migrations", dbURL)
+	if err != nil {
+		panic(err)
+	}
+	// m.Force(-1)
+	err = m.Up()
+	if err != nil {
+		panic(err)
+	}
+
 	dbOptions, err := pg.ParseURL(dbURL)
 	if err != nil {
 		panic(err)
@@ -24,19 +38,6 @@ func DBConnect() *pg.DB {
 			log.Printf("%s %s", time.Since(event.StartTime), query)
 		})
 	}
-	// err := createSchema(db)
-	// if err != nil {
-	// 	panic(err)
-	// }
+
 	return db
 }
-
-// func createSchema(db *pg.DB) error {
-// 	for _, model := range []interface{}{&InboxItem{}, &User{}, &Goal{}, &Action{}} {
-// 		err := db.CreateTable(model, nil)
-// 		if err != nil {
-// 			return err
-// 		}
-// 	}
-// 	return nil
-// }

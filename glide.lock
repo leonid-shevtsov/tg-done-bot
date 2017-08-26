@@ -1,8 +1,8 @@
-hash: aa855531ae27449ee5b15adbda308ae97964fea2f663dcee33baf5f4b7c98bd6
-updated: 2017-08-26T09:30:19.753624021+03:00
+hash: 4e75532484ed9186b89fdb3eee214f947c5a773a0745b7dade21a581a146958a
+updated: 2017-08-26T20:17:57.9976886+03:00
 imports:
 - name: github.com/go-pg/pg
-  version: 553dab9924ee3512f4900d8ae246c6164a961726
+  version: 6b379280e4b806f329f36da1710cabe134991509
   subpackages:
   - internal
   - internal/parser
@@ -13,6 +13,16 @@ imports:
   version: 9dda67c714e5e2cba837b28a0172cca2ed54f078
 - name: github.com/jinzhu/inflection
   version: 1c35d901db3da928c72a72d8458480cc9ade058f
+- name: github.com/lib/pq
+  version: 165a3529e799da61ab10faed1fabff3662d6193f
+  subpackages:
+  - oid
+- name: github.com/mattes/migrate
+  version: 035c07716cd373d88456ec4d701402df52584cb4
+  subpackages:
+  - database
+  - database/postgres
+  - source
 - name: github.com/technoweenie/multipartstreamer
   version: a90a01d73ae432e2611d178c18367fbaa13e0154
 testImports: []
