@@ -1,8 +1,18 @@
 hash: aa855531ae27449ee5b15adbda308ae97964fea2f663dcee33baf5f4b7c98bd6
-updated: 2017-08-25T08:40:39.065590657+03:00
+updated: 2017-08-26T09:30:19.753624021+03:00
 imports:
 - name: github.com/go-pg/pg
-  version: 3b0eccfa10f93b9e49edb9d44c363fa6b05527f4
+  version: 553dab9924ee3512f4900d8ae246c6164a961726
+  subpackages:
+  - internal
+  - internal/parser
+  - internal/pool
+  - orm
+  - types
 - name: github.com/go-telegram-bot-api/telegram-bot-api
   version: 9dda67c714e5e2cba837b28a0172cca2ed54f078
+- name: github.com/jinzhu/inflection
+  version: 1c35d901db3da928c72a72d8458480cc9ade058f
+- name: github.com/technoweenie/multipartstreamer
+  version: a90a01d73ae432e2611d178c18367fbaa13e0154
 testImports: []
