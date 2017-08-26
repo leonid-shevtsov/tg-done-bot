@@ -35,7 +35,7 @@ func (i *interaction) handleIsItActionable() {
 	switch i.message.Text {
 	case yesCommand:
 		i.gotoWhatIsTheGoal()
-	case noCommand:
+	case noTrashItCommand:
 		i.trashCurrentInboxItem()
 	case abortCommand:
 		i.abortProcessing()
