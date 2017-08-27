@@ -72,6 +72,7 @@ type Action struct {
 	GoalID      int       `sql:",notnull"`
 	Text        string    `sql:",notnull"`
 	CreatedAt   time.Time `sql:",notnull"`
+	ReviewedAt  time.Time `sql:",notnull"`
 	CompletedAt time.Time
 
 	User *User
@@ -81,6 +82,7 @@ type Action struct {
 func (a *Action) BeforeInsert(db orm.DB) error {
 	if a.CreatedAt.IsZero() {
 		a.CreatedAt = time.Now()
+		a.ReviewedAt = time.Now()
 	}
 	return nil
 }

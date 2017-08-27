@@ -37,7 +37,9 @@ func (i *interaction) createAction() {
 	i.repo.insert(action)
 	i.user.CurrentActionID = action.ID
 	i.repo.update(i.user)
-	// the inbox item is considered processed once there is an action
-	i.user.CurrentInboxItem.ProcessedAt = time.Now()
-	i.repo.update(i.user.CurrentInboxItem)
+	if i.user.CurrentInboxItem != nil {
+		// the inbox item is considered processed once there is an action
+		i.user.CurrentInboxItem.ProcessedAt = time.Now()
+		i.repo.update(i.user.CurrentInboxItem)
+	}
 }

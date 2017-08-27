@@ -18,7 +18,7 @@ func DBConnect() *pg.DB {
 	if err != nil {
 		panic(err)
 	}
-	// m.Force(-1)
+	// m.Force(1)
 	err = m.Up()
 	if err != nil && err != migrate.ErrNoChange {
 		panic(err)

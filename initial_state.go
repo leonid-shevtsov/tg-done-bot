@@ -6,10 +6,10 @@ import (
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-const processInboxCommand = "Process inbox"
+const beProductiveCommand = "I'm ready for some work"
 
 var initialStateKeyboard = [][]telegram.KeyboardButton{
-	[]telegram.KeyboardButton{{Text: processInboxCommand}},
+	[]telegram.KeyboardButton{{Text: beProductiveCommand}},
 }
 
 func (i *interaction) gotoInitialState() {
@@ -21,19 +21,34 @@ func (i *interaction) gotoInitialState() {
 
 	if previousState == onboardingState {
 		i.sendMessage("Collecting inbox now. Send me anything that comes up, one thing at a time.")
-	} else if i.inboxCount() > 0 {
+	} else if i.someWorkToBeDone() {
 		i.sendPrompt("Back to collecting inbox.", initialStateKeyboard)
 	} else {
 		i.sendMessage("Back to collecting inbox.")
 	}
 }
 
+func (i *interaction) someWorkToBeDone() bool {
+	return i.inboxCount() > 0 || i.actionCount() > 0
+}
+
 func (i *interaction) handleInitial() {
 	switch i.message.Text {
-	case processInboxCommand:
-		i.gotoProcessInbox()
+	case beProductiveCommand:
+		i.gotoNextWorkUnit()
 	default:
 		i.addInboxItem()
+	}
+}
+
+func (i *interaction) gotoNextWorkUnit() {
+	if i.inboxCount() > 0 {
+		i.gotoProcessInbox()
+	} else if i.actionCount() > 0 {
+		i.gotoActionSuggestionState()
+	} else {
+		i.sendMessage("No more work!")
+		i.gotoInitialState()
 	}
 }
 

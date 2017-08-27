@@ -17,6 +17,9 @@ const (
 	whatIsTheNextActionState
 	canYouDoItNowState
 	doItNowState
+	actionSuggestionState
+	actionDoingState
+	moveGoalForwardState
 )
 
 type interaction struct {
@@ -61,6 +64,12 @@ func (i *interaction) dispatchStateHandler() {
 		i.handleCanYouDoItNow()
 	case doItNowState:
 		i.handleDoItNow()
+	case actionSuggestionState:
+		i.handleActionSuggestion()
+	case actionDoingState:
+		i.handleActionDoing()
+	case moveGoalForwardState:
+		i.handleMoveGoalForward()
 	default:
 		panic("bad state")
 	}
@@ -87,4 +96,8 @@ func (i *interaction) sendUnclear() {
 
 func (i *interaction) inboxCount() int {
 	return i.repo.inboxCount(i.user.ID)
+}
+
+func (i *interaction) actionCount() int {
+	return i.repo.actionCount(i.user.ID)
 }

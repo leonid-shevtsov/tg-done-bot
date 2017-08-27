@@ -50,5 +50,5 @@ func (i *interaction) trashCurrentInboxItem() {
 	i.repo.update(i.user.CurrentInboxItem)
 
 	i.sendMessage("Trashed! Moving on.")
-	i.gotoProcessInbox()
+	i.gotoNextWorkUnit()
 }

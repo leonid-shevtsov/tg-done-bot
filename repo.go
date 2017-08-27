@@ -77,3 +77,30 @@ func (r *repo) inboxCount(userID int) int {
 	}
 	return count
 }
+
+func (r *repo) actionCount(userID int) int {
+	count, err := r.tx.Model(&Action{}).
+		Where("user_id = ? AND completed_at IS NULL", userID).
+		Count()
+	if err != nil {
+		panic(err)
+	}
+	return count
+}
+
+func (r *repo) actionToDo(userID int) *Action {
+	var actionsToDo []Action
+	err := r.tx.Model(&actionsToDo).
+		Where("user_id = ? AND completed_at IS NULL", userID).
+		Order("reviewed_at ASC").
+		Limit(1).
+		Select()
+	if err != nil {
+		panic(err)
+	}
+	if len(actionsToDo) > 0 {
+		actionToDo := actionsToDo[0]
+		return &actionToDo
+	}
+	return nil
+}
