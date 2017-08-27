@@ -41,4 +41,6 @@ func (i *interaction) handleMoveGoalForward() {
 func (i *interaction) markGoalAsCompleted() {
 	i.user.CurrentGoal.CompletedAt = time.Now()
 	i.repo.update(i.user.CurrentGoal)
+	i.user.CurrentGoalID = 0
+	i.repo.update(i.user)
 }
