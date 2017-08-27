@@ -10,7 +10,8 @@ import (
 type interactionState int
 
 const (
-	initialState = interactionState(iota)
+	onboardingState = interactionState(iota)
+	initialState
 	isItActionableState
 	whatIsTheGoalState
 	whatIsTheNextActionState
@@ -46,6 +47,8 @@ func (i *interaction) handleMessage() {
 
 func (i *interaction) dispatchStateHandler() {
 	switch interactionState(i.user.State) {
+	case onboardingState:
+		i.handleOnboarding()
 	case initialState:
 		i.handleInitial()
 	case isItActionableState:

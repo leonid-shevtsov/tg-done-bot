@@ -13,12 +13,15 @@ var initialStateKeyboard = [][]telegram.KeyboardButton{
 }
 
 func (i *interaction) gotoInitialState() {
+	previousState := interactionState(i.user.State)
 	i.user.State = int(initialState)
 	i.user.CurrentInboxItemID = 0
 	i.user.CurrentGoalID = 0
 	i.repo.update(i.user)
 
-	if i.inboxCount() > 0 {
+	if previousState == onboardingState {
+		i.sendMessage("Collecting inbox now. Send me anything that comes up, one thing at a time.")
+	} else if i.inboxCount() > 0 {
 		i.sendPrompt("Back to collecting inbox.", initialStateKeyboard)
 	} else {
 		i.sendMessage("Back to collecting inbox.")
