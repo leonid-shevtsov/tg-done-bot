@@ -8,9 +8,19 @@ import (
 
 const doingCommand = "Yes, I'll do this."
 const skipCommand = "Skip this one for now."
+const deferCommand = "Defer until later."
 
-var actionSuggestionKeyboard = [][]telegram.KeyboardButton{
-	[]telegram.KeyboardButton{{Text: doingCommand}, {Text: skipCommand}},
+// const deferCommand = "Need a context."
+const backToInboxCommand = "Done working for now."
+
+var baseActionSuggestionKeyboard = [][]telegram.KeyboardButton{
+	[]telegram.KeyboardButton{{Text: doingCommand}, {Text: skipCommand}, {Text: backToInboxCommand}},
+}
+
+func (i *interaction) actionSuggestionKeyboard() [][]telegram.KeyboardButton {
+	baseKeyboard := baseActionSuggestionKeyboard
+	// contexts := i.repo.contexts(i.user.ID)
+	return baseKeyboard
 }
 
 func (i *interaction) gotoActionSuggestionState() {
@@ -21,7 +31,7 @@ func (i *interaction) gotoActionSuggestionState() {
 		i.repo.update(i.user)
 
 		i.sendMessage("I think you should do this now:")
-		i.sendPrompt(actionToDo.Text, actionSuggestionKeyboard)
+		i.sendPrompt(actionToDo.Text, i.actionSuggestionKeyboard())
 	} else {
 		i.sendMessage("No more actions to do right now. Take a break?")
 		i.gotoInitialState()
@@ -35,9 +45,12 @@ func (i *interaction) handleActionSuggestion() {
 	case skipCommand:
 		i.skipAction()
 		i.gotoActionSuggestionState()
+	case backToInboxCommand:
+		i.sendMessage("OK, back to collecting inbox.")
+		i.gotoInitialState()
 	default:
 		i.sendUnclear()
-		i.sendPrompt("Can you do this now?", actionSuggestionKeyboard)
+		i.sendPrompt("Can you do this now?", i.actionSuggestionKeyboard())
 	}
 }
 

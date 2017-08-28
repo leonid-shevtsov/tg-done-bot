@@ -104,3 +104,14 @@ func (r *repo) actionToDo(userID int) *Action {
 	}
 	return nil
 }
+
+func (r *repo) contexts(userID int) []*Context {
+	var contexts []*Context
+	err := r.tx.Model(&contexts).
+		Where("user_id=?", userID).
+		Select()
+	if err != nil {
+		panic(err)
+	}
+	return contexts
+}
