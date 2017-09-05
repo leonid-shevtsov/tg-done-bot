@@ -8,7 +8,7 @@ import (
 
 type User struct {
 	ID                 int `sql:",pk"`
-	State              int `sql:",notnull"`
+	ActiveQuestion     string
 	CurrentInboxItemID int
 	CurrentGoalID      int
 	CurrentActionID    int

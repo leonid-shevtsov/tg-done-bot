@@ -1,0 +1,52 @@
+en:
+  collecting_inbox:
+    prompt: "Collecting inbox."
+    start_working: "I'm ready for some work"
+    no_more_work: "No more work!"
+    added:
+      one: "Added to inbox. Now in inbox: %d item."
+      other: "Added to inbox. Now in inbox: %d items."
+  is_it_actionable:
+    processing_inbox_item: "Processing inbox item:"
+    prompt: "Is it actionable?"
+    trashed: "Trashed! Moving on."
+    no_trash_it: "No - trash it"
+  what_is_the_goal:
+    prompt: "What is the goal here?"
+  what_is_the_next_action:
+    prompt: "What is the next physical action?"
+  can_you_do_it_now:
+    prompt: "Can you do it now in 2 minutes?"
+  do_it_now:
+    prompt: "Do it! 2 minutes and counting."
+  action_suggestion:
+    prompt: "I think you should do this now:"
+    doing: "Yes, I'll do this."
+    skip: "Skip this one for now."
+    # defer: "Defer until later."
+    back_to_inbox: "Done working for now."
+    skipping: "OK, skipping for now..."
+  doing:
+    prompt: "Great! Waiting for you to finish."
+    completed: "Awesome!"
+  move_goal_forward:
+    now_you_are_closer_to_achieving: "Now you are closer to achieving:"
+    prompt: "What is the next action towards this goal?"
+    goal_is_achieved: "This goal is achieved"
+    review_later: "Let's review it later"
+    congratulations_complete: "Congratulations on succeeding!"
+    will_review_later: "OK, marked goal for review."
+    added_action: "OK, recorded next action for this goal."
+  processing:
+    trash_it: "Let's just trash it"
+    abort: "Let's do this later"
+    aborted:
+      one: "OK. %d inbox item left to process."
+      other: "OK. %d inbox items left to process."
+  messages:
+    pick_one_of_the_options: "Please pick one of the options."
+  commands:
+    "yes": "Yes"
+    "no": "No"
+    done: "Done!"
+    do_it_later: "I'll do it later"

@@ -35,8 +35,7 @@ func RunBot(db *pg.DB) {
 		if update.Message == nil {
 			continue
 		}
-		interaction := newInteraction(db, bot, update.Message)
-		interaction.handleMessage()
+		handleMessage(bot, update.Message, db)
 	}
 }
 

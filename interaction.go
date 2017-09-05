@@ -1,103 +1,81 @@
 package gtd_bot
 
 import (
-	"time"
+	"leonid.shevtsov.me/gtd_bot/i18n"
 
 	"github.com/go-pg/pg"
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-type interactionState int
-
-const (
-	onboardingState = interactionState(iota)
-	initialState
-	isItActionableState
-	whatIsTheGoalState
-	whatIsTheNextActionState
-	canYouDoItNowState
-	doItNowState
-	actionSuggestionState
-	actionDoingState
-	moveGoalForwardState
-)
-
 type interaction struct {
-	repo    *repo
 	bot     *telegram.BotAPI
+	state   *state
 	message *telegram.Message
-	user    *User
+	locale  *i18n.Locale
 }
 
-func newInteraction(db *pg.DB, bot *telegram.BotAPI, message *telegram.Message) *interaction {
-	return &interaction{repo: newRepo(db), bot: bot, message: message}
-}
+func handleMessage(bot *telegram.BotAPI, message *telegram.Message, db *pg.DB) {
+	repo := newRepo(db)
+	defer repo.finalizeTransaction()
 
-func (i *interaction) handleMessage() {
-	defer i.repo.finalizeTransaction()
-
-	i.user = i.repo.findUser(i.message.From.ID)
-
+	state := newState(repo, message.From.ID)
+	interaction := interaction{state: state, bot: bot, message: message, locale: &i18n.En}
+	interaction.state.setLastMessageNow()
 	// TODO perhaps show welcome text if it is a new user
 	// TODO someday, check user payment status, or else
-
-	i.user.LastMessageAt = time.Now()
-	i.repo.update(i.user)
-
-	// now dispatch based on user's state
-	i.dispatchStateHandler()
+	interaction.runQuestions()
 }
 
-func (i *interaction) dispatchStateHandler() {
-	switch interactionState(i.user.State) {
-	case onboardingState:
-		i.handleOnboarding()
-	case initialState:
-		i.handleInitial()
-	case isItActionableState:
-		i.handleIsItActionable()
-	case whatIsTheGoalState:
-		i.handleWhatIsTheGoal()
-	case whatIsTheNextActionState:
-		i.handleWhatIsTheNextAction()
-	case canYouDoItNowState:
-		i.handleCanYouDoItNow()
-	case doItNowState:
-		i.handleDoItNow()
-	case actionSuggestionState:
-		i.handleActionSuggestion()
-	case actionDoingState:
-		i.handleActionDoing()
-	case moveGoalForwardState:
-		i.handleMoveGoalForward()
-	default:
-		panic("bad state")
+const answerUnclear = "answer_unclear"
+
+func (i *interaction) runQuestions() {
+	question := questionMap[i.state.activeQuestion()]
+	if question == nil {
+		panic("unhandled question key")
+		// TODO handle more gracefully?
 	}
+
+	nextQuestionKey := question.handleAnswer(i)
+
+	if nextQuestionKey == answerUnclear {
+		i.sendUnclear()
+		return
+	}
+
+	nextQuestion := questionMap[nextQuestionKey]
+	if nextQuestion == nil {
+		panic("unhandled next question key")
+	}
+
+	i.state.setActiveQuestion(nextQuestionKey)
+	nextQuestion.ask(i)
 }
 
 func (i *interaction) sendMessage(messageText string) {
-	msg := telegram.NewMessage(int64(i.user.ID), messageText)
+	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
+	msg.ReplyMarkup = telegram.ReplyKeyboardRemove{RemoveKeyboard: true}
 	i.bot.Send(msg)
 }
 
-func (i *interaction) sendPrompt(messageText string, keyboard [][]telegram.KeyboardButton) {
-	msg := telegram.NewMessage(int64(i.user.ID), messageText)
+func (i *interaction) sendPrompt(messageText string, keyboard [][]string) {
+	var telegramKeyboard [][]telegram.KeyboardButton
+	for _, row := range keyboard {
+		var telegramRow []telegram.KeyboardButton
+		for _, buttonText := range row {
+			telegramRow = append(telegramRow, telegram.KeyboardButton{Text: buttonText})
+		}
+		telegramKeyboard = append(telegramKeyboard, telegramRow)
+	}
+
+	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
 	msg.ReplyMarkup = telegram.ReplyKeyboardMarkup{
-		Keyboard:        keyboard,
-		ResizeKeyboard:  true,
-		OneTimeKeyboard: true,
+		Keyboard:       telegramKeyboard,
+		ResizeKeyboard: true,
 	}
 	i.bot.Send(msg)
 }
 
 func (i *interaction) sendUnclear() {
-	i.sendMessage("Please pick one of the options.")
-}
-
-func (i *interaction) inboxCount() int {
-	return i.repo.inboxCount(i.user.ID)
-}
-
-func (i *interaction) actionCount() int {
-	return i.repo.actionCount(i.user.ID)
+	msg := telegram.NewMessage(int64(i.state.userID()), i.locale.Messages.PickOneOfTheOptions)
+	i.bot.Send(msg)
 }
