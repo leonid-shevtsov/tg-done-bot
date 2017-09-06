@@ -12,14 +12,15 @@ func askActionSuggestion(i *interaction) {
 		i.sendMessage(i.locale.ActionSuggestion.IThinkYouShouldWorkOn)
 		i.sendMessage(actionToDo.Goal.Text)
 		i.sendMessage(i.locale.ActionSuggestion.ByDoing)
-		i.sendPrompt(actionToDo.Text, [][]string{{
-			i.locale.ActionSuggestion.Doing,
-			i.locale.ActionSuggestion.Skip,
-			i.locale.ActionSuggestion.ItIsDone,
-			i.locale.ActionSuggestion.TrashGoal,
-			// i.locale.ActionSuggestion.Defer,
-			i.locale.ActionSuggestion.BackToInbox,
-		}})
+		i.sendPrompt(actionToDo.Text, [][]string{
+			{i.locale.ActionSuggestion.Doing},
+			{i.locale.ActionSuggestion.Skip},
+			{i.locale.ActionSuggestion.ItIsDone},
+			{i.locale.ActionSuggestion.ChangeNextAction},
+			{i.locale.Commands.WaitingFor},
+			{i.locale.Commands.TrashGoal},
+			{i.locale.Commands.BackToInbox},
+		})
 	} else {
 		panic("bad precondition for action_suggestion question")
 	}
@@ -37,11 +38,17 @@ func handleActionSuggestion(i *interaction) string {
 		i.state.completeCurrentAction()
 		i.sendMessage(i.locale.Doing.Completed)
 		return questionMoveGoalForward
-	case i.locale.ActionSuggestion.TrashGoal:
+	case i.locale.ActionSuggestion.ChangeNextAction:
+		i.state.dropCurrentAction()
+		return questionMoveGoalForward
+	case i.locale.Commands.WaitingFor:
+		i.state.dropCurrentAction()
+		return questionWhatIsTheGoalWaitingFor
+	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.ActionSuggestion.GoalTrashed)
+		i.sendMessage(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
-	case i.locale.ActionSuggestion.BackToInbox:
+	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox
 	default:
 		return answerUnclear

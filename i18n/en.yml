@@ -15,6 +15,10 @@ en:
     prompt: "What is the goal here?"
   what_is_the_next_action:
     prompt: "What is the next physical action?"
+    waiting_for: "I am blocked (waiting)"
+  what_are_you_waiting_for:
+    prompt: "What are you waiting for?"
+    nothing: "Actually, I'm unblocked."
   can_you_do_it_now:
     prompt: "Can you do it now in 2 minutes?"
   do_it_now:
@@ -24,23 +28,29 @@ en:
     by_doing: "by doing:"
     doing: "Yes, I'll do this."
     skip: "Skip this one for now."
-    # defer: "Defer until later."
+    change_next_action: "Let's set another next action."
     it_is_done: "It is already done."
-    trash_goal: "Trash this goal."
-    back_to_inbox: "Done working for now."
     skipping: "OK, skipping for now..."
-    goal_trashed: "OK, goal trashed."
   doing:
     prompt: "Great! Waiting for you to finish."
     completed: "Awesome!"
   move_goal_forward:
-    now_you_are_closer_to_achieving: "Now you are closer to achieving:"
     prompt: "What is the next action towards this goal?"
     goal_is_achieved: "This goal is achieved"
     review_later: "Let's review it later"
     congratulations_complete: "Congratulations on succeeding!"
     will_review_later: "OK, marked goal for review."
     added_action: "OK, recorded next action for this goal."
+  check_waiting_for:
+    your_goal: "Your goal:"
+    is_waiting_for: "is waiting for:"
+    it_is_ready: "It is ready."
+    still_waiting: "Still waiting."
+    success: "Awesome! Moving on."
+    continuing_to_wait: "OK, waiting for now."
+  what_is_the_goal_waiting_for:
+    prompt: "What is the goal waiting for?"
+    nothing: "Actually, it's not blocked."
   processing:
     trash_it: "Let's just trash it"
     abort: "Let's do this later"
@@ -49,8 +59,12 @@ en:
       other: "OK. %d inbox items left to process."
   messages:
     pick_one_of_the_options: "Please pick one of the options."
+    goal_trashed: "OK, goal trashed."
   commands:
     "yes": "Yes"
     "no": "No"
     done: "Done!"
     do_it_later: "I'll do it later"
+    trash_goal: "Trash this goal."
+    back_to_inbox: "Done working for now."
+    waiting_for: "I am waiting for something"

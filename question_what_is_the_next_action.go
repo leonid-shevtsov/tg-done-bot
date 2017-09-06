@@ -7,16 +7,19 @@ func init() {
 }
 
 func askWhatIsTheNextAction(i *interaction) {
-	i.sendPrompt(i.locale.WhatIsTheNextAction.Prompt, [][]string{{
-		i.locale.Processing.TrashIt,
-		i.locale.Processing.Abort,
-	}})
+	i.sendPrompt(i.locale.WhatIsTheNextAction.Prompt, [][]string{
+		{i.locale.Processing.TrashIt},
+		{i.locale.WhatIsTheNextAction.WaitingFor},
+		{i.locale.Processing.Abort},
+	})
 }
 
 func handleWhatIsTheNextAction(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.Processing.TrashIt:
 		return endProcessingByTrashing(i)
+	case i.locale.WhatIsTheNextAction.WaitingFor:
+		return questionWhatAreYouWaitingFor
 	case i.locale.Processing.Abort:
 		return endProcessingByAborting(i)
 	default:

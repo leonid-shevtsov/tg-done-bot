@@ -29,7 +29,13 @@ type LocaleWhatIsTheGoal struct {
 }
 
 type LocaleWhatIsTheNextAction struct {
-	Prompt string
+	Prompt     string
+	WaitingFor string
+}
+
+type LocaleWhatAreYouWaitingFor struct {
+	Prompt  string
+	Nothing string
 }
 
 type LocaleCanYouDoItNow struct {
@@ -45,11 +51,9 @@ type LocaleActionSuggestion struct {
 	ByDoing               string
 	Doing                 string
 	Skip                  string
+	ChangeNextAction      string
 	ItIsDone              string
-	TrashGoal             string
-	BackToInbox           string
 	Skipping              string
-	GoalTrashed           string
 }
 
 type LocaleDoing struct {
@@ -58,13 +62,26 @@ type LocaleDoing struct {
 }
 
 type LocaleMoveGoalForward struct {
-	NowYouAreCloserToAchieving string
-	Prompt                     string
-	GoalIsAchieved             string
-	ReviewLater                string
-	CongratulationsComplete    string
-	WillReviewLater            string
-	AddedAction                string
+	Prompt                  string
+	GoalIsAchieved          string
+	ReviewLater             string
+	CongratulationsComplete string
+	WillReviewLater         string
+	AddedAction             string
+}
+
+type LocaleCheckWaitingFor struct {
+	YourGoal         string
+	IsWaitingFor     string
+	ItIsReady        string
+	StillWaiting     string
+	Success          string
+	ContinuingToWait string
+}
+
+type LocaleWhatIsTheGoalWaitingFor struct {
+	Prompt  string
+	Nothing string
 }
 
 type LocaleProcessing struct {
@@ -75,28 +92,35 @@ type LocaleProcessing struct {
 
 type LocaleMessages struct {
 	PickOneOfTheOptions string
+	GoalTrashed         string
 }
 
 type LocaleCommands struct {
-	Yes       string
-	No        string
-	Done      string
-	DoItLater string
+	Yes         string
+	No          string
+	Done        string
+	DoItLater   string
+	TrashGoal   string
+	BackToInbox string
+	WaitingFor  string
 }
 
 type Locale struct {
-	CollectingInbox     LocaleCollectingInbox
-	IsItActionable      LocaleIsItActionable
-	WhatIsTheGoal       LocaleWhatIsTheGoal
-	WhatIsTheNextAction LocaleWhatIsTheNextAction
-	CanYouDoItNow       LocaleCanYouDoItNow
-	DoItNow             LocaleDoItNow
-	ActionSuggestion    LocaleActionSuggestion
-	Doing               LocaleDoing
-	MoveGoalForward     LocaleMoveGoalForward
-	Processing          LocaleProcessing
-	Messages            LocaleMessages
-	Commands            LocaleCommands
+	CollectingInbox         LocaleCollectingInbox
+	IsItActionable          LocaleIsItActionable
+	WhatIsTheGoal           LocaleWhatIsTheGoal
+	WhatIsTheNextAction     LocaleWhatIsTheNextAction
+	WhatAreYouWaitingFor    LocaleWhatAreYouWaitingFor
+	CanYouDoItNow           LocaleCanYouDoItNow
+	DoItNow                 LocaleDoItNow
+	ActionSuggestion        LocaleActionSuggestion
+	Doing                   LocaleDoing
+	MoveGoalForward         LocaleMoveGoalForward
+	CheckWaitingFor         LocaleCheckWaitingFor
+	WhatIsTheGoalWaitingFor LocaleWhatIsTheGoalWaitingFor
+	Processing              LocaleProcessing
+	Messages                LocaleMessages
+	Commands                LocaleCommands
 }
 
 var En = Locale{
@@ -119,6 +143,11 @@ var En = Locale{
 	},
 	LocaleWhatIsTheNextAction{
 		"What is the next physical action?",
+		"I am blocked (waiting)",
+	},
+	LocaleWhatAreYouWaitingFor{
+		"What are you waiting for?",
+		"Actually, I'm unblocked.",
 	},
 	LocaleCanYouDoItNow{
 		"Can you do it now in 2 minutes?",
@@ -131,24 +160,33 @@ var En = Locale{
 		"by doing:",
 		"Yes, I'll do this.",
 		"Skip this one for now.",
+		"Let's set another next action.",
 		"It is already done.",
-		"Trash this goal.",
-		"Done working for now.",
 		"OK, skipping for now...",
-		"OK, goal trashed.",
 	},
 	LocaleDoing{
 		"Great! Waiting for you to finish.",
 		"Awesome!",
 	},
 	LocaleMoveGoalForward{
-		"Now you are closer to achieving:",
 		"What is the next action towards this goal?",
 		"This goal is achieved",
 		"Let's review it later",
 		"Congratulations on succeeding!",
 		"OK, marked goal for review.",
 		"OK, recorded next action for this goal.",
+	},
+	LocaleCheckWaitingFor{
+		"Your goal:",
+		"is waiting for:",
+		"It is ready.",
+		"Still waiting.",
+		"Awesome! Moving on.",
+		"OK, waiting for now.",
+	},
+	LocaleWhatIsTheGoalWaitingFor{
+		"What is the goal waiting for?",
+		"Actually, it's not blocked.",
 	},
 	LocaleProcessing{
 		"Let's just trash it",
@@ -159,11 +197,15 @@ var En = Locale{
 	},
 	LocaleMessages{
 		"Please pick one of the options.",
+		"OK, goal trashed.",
 	},
 	LocaleCommands{
 		"Yes",
 		"No",
 		"Done!",
 		"I'll do it later",
+		"Trash this goal.",
+		"Done working for now.",
+		"I am waiting for something",
 	},
 }

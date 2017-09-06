@@ -24,14 +24,3 @@ func handleCollectingInbox(i *interaction) string {
 		return questionCollectingInbox
 	}
 }
-
-func nextWorkQuestion(i *interaction) string {
-	if i.state.inboxCount() > 0 {
-		return questionProcessInbox
-	} else if i.state.actionCount() > 0 {
-		return questionActionSuggestion
-	} else {
-		i.sendMessage(i.locale.CollectingInbox.NoMoreWork)
-		return questionCollectingInbox
-	}
-}

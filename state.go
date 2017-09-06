@@ -33,6 +33,10 @@ func (s *state) actionCount() int {
 	return s.repo.actionCount(s.user.ID)
 }
 
+func (s *state) waitingForCount() int {
+	return s.repo.waitingForCount(s.user.ID)
+}
+
 func (s *state) inboxItemToProcess() *InboxItem {
 	return s.repo.inboxItemToProcess(s.user.ID)
 }
@@ -50,7 +54,7 @@ func (s *state) setLastMessageNow() {
 }
 
 func (s *state) someWorkToBeDone() bool {
-	return s.inboxCount() > 0 || s.actionCount() > 0
+	return s.inboxCount() > 0 || s.actionCount() > 0 || s.waitingForCount() > 0
 }
 
 func (s *state) addInboxItem(text string) {
@@ -92,6 +96,22 @@ func (s *state) createActionAndMakeCurrent(text string) {
 	}
 }
 
+func (s *state) createWaitingForAndMakeCurrent(text string) {
+	waitingFor := &WaitingFor{
+		UserID: s.user.ID,
+		GoalID: s.user.CurrentGoalID,
+		Text:   text,
+	}
+	s.repo.insert(waitingFor)
+	s.user.CurrentWaitingForID = waitingFor.ID
+	s.repo.update(s.user)
+	if s.user.CurrentInboxItem != nil {
+		// the inbox item is considered processed once there is an waitingFor
+		s.user.CurrentInboxItem.ProcessedAt = time.Now()
+		s.repo.update(s.user.CurrentInboxItem)
+	}
+}
+
 func (s *state) markActionCompleted() {
 	s.user.CurrentAction.CompletedAt = time.Now()
 	s.repo.update(s.user.CurrentAction)
@@ -101,15 +121,30 @@ func (s *state) actionToDo() *Action {
 	return s.repo.actionToDo(s.user.ID)
 }
 
+func (s *state) waitingForToCheck() *WaitingFor {
+	return s.repo.waitingForToCheck(s.user.ID)
+}
+
 func (s *state) setSuggestedAction(action *Action) {
 	s.user.CurrentActionID = action.ID
 	s.user.CurrentGoalID = action.GoalID
 	s.repo.update(s.user)
 }
 
+func (s *state) setCurrentWaitingFor(waitingFor *WaitingFor) {
+	s.user.CurrentWaitingForID = waitingFor.ID
+	s.user.CurrentGoalID = waitingFor.GoalID
+	s.repo.update(s.user)
+}
+
 func (s *state) skipCurrentAction() {
 	s.user.CurrentAction.ReviewedAt = time.Now()
 	s.repo.update(s.user.CurrentAction)
+}
+
+func (s *state) continueToWait() {
+	s.user.CurrentWaitingFor.ReviewedAt = time.Now()
+	s.repo.update(s.user.CurrentWaitingFor)
 }
 
 func (s *state) completeCurrentAction() {
@@ -122,8 +157,18 @@ func (s *state) completeCurrentGoal() {
 	s.repo.update(s.user.CurrentGoal)
 }
 
+func (s *state) completeCurrentWaitingFor() {
+	s.user.CurrentWaitingFor.CompletedAt = time.Now()
+	s.repo.update(s.user.CurrentWaitingFor)
+}
+
 func (s *state) dropCurrentGoal() {
 	s.user.CurrentGoal.DroppedAt = time.Now()
 	s.repo.update(s.user.CurrentGoal)
-	s.repo.dropGoalActions(s.user.CurrentGoalID)
+	s.repo.dropGoalActionsAndWaitingFors(s.user.CurrentGoalID)
+}
+
+func (s *state) dropCurrentAction() {
+	s.user.CurrentAction.DroppedAt = time.Now()
+	s.repo.update(s.user.CurrentAction)
 }

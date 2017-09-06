@@ -7,10 +7,10 @@ func init() {
 }
 
 func askMoveGoalForward(i *interaction) {
-	i.sendMessage(i.locale.MoveGoalForward.NowYouAreCloserToAchieving)
-	i.sendMessage(i.state.user.CurrentGoal.Text)
-	i.sendPrompt(i.locale.MoveGoalForward.Prompt, [][]string{{
+	i.sendMessage(i.locale.MoveGoalForward.Prompt)
+	i.sendPrompt(i.state.user.CurrentGoal.Text, [][]string{{
 		i.locale.MoveGoalForward.GoalIsAchieved,
+		i.locale.Commands.WaitingFor,
 		i.locale.MoveGoalForward.ReviewLater,
 	}})
 }
@@ -21,6 +21,8 @@ func handleMoveGoalForward(i *interaction) string {
 		i.sendMessage(i.locale.MoveGoalForward.CongratulationsComplete)
 		i.state.completeCurrentGoal()
 		return nextWorkQuestion(i)
+	case i.locale.Commands.WaitingFor:
+		return questionWhatIsTheGoalWaitingFor
 	case i.locale.MoveGoalForward.ReviewLater:
 		i.sendMessage(i.locale.MoveGoalForward.WillReviewLater)
 		return nextWorkQuestion(i)
