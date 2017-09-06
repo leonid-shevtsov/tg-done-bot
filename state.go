@@ -121,3 +121,9 @@ func (s *state) completeCurrentGoal() {
 	s.user.CurrentGoal.CompletedAt = time.Now()
 	s.repo.update(s.user.CurrentGoal)
 }
+
+func (s *state) dropCurrentGoal() {
+	s.user.CurrentGoal.DroppedAt = time.Now()
+	s.repo.update(s.user.CurrentGoal)
+	s.repo.dropGoalActions(s.user.CurrentGoalID)
+}

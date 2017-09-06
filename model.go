@@ -75,6 +75,7 @@ type Action struct {
 	CreatedAt   time.Time `sql:",notnull"`
 	ReviewedAt  time.Time `sql:",notnull"`
 	CompletedAt time.Time
+	DroppedAt   time.Time
 
 	User    *User
 	Goal    *Goal

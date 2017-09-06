@@ -16,6 +16,7 @@ func askActionSuggestion(i *interaction) {
 			i.locale.ActionSuggestion.Doing,
 			i.locale.ActionSuggestion.Skip,
 			i.locale.ActionSuggestion.ItIsDone,
+			i.locale.ActionSuggestion.TrashGoal,
 			// i.locale.ActionSuggestion.Defer,
 			i.locale.ActionSuggestion.BackToInbox,
 		}})
@@ -36,6 +37,10 @@ func handleActionSuggestion(i *interaction) string {
 		i.state.completeCurrentAction()
 		i.sendMessage(i.locale.Doing.Completed)
 		return questionMoveGoalForward
+	case i.locale.ActionSuggestion.TrashGoal:
+		i.state.dropCurrentGoal()
+		i.sendMessage(i.locale.ActionSuggestion.GoalTrashed)
+		return nextWorkQuestion(i)
 	case i.locale.ActionSuggestion.BackToInbox:
 		return questionCollectingInbox
 	default:

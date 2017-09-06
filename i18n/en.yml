@@ -26,8 +26,10 @@ en:
     skip: "Skip this one for now."
     # defer: "Defer until later."
     it_is_done: "It is already done."
+    trash_goal: "Trash this goal."
     back_to_inbox: "Done working for now."
     skipping: "OK, skipping for now..."
+    goal_trashed: "OK, goal trashed."
   doing:
     prompt: "Great! Waiting for you to finish."
     completed: "Awesome!"

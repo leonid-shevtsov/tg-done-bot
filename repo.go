@@ -1,6 +1,10 @@
 package gtd_bot
 
-import "github.com/go-pg/pg"
+import (
+	"time"
+
+	"github.com/go-pg/pg"
+)
 
 type repo struct {
 	tx *pg.Tx
@@ -91,7 +95,7 @@ func (r *repo) actionCount(userID int) int {
 func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
 	err := r.tx.Model(&actionsToDo).
-		Where("action.user_id = ? AND action.completed_at IS NULL", userID).
+		Where("action.user_id = ? AND action.completed_at IS NULL AND action.dropped_at IS NULL", userID).
 		Order("reviewed_at ASC").
 		Limit(1).
 		Column("action.*", "Goal").
@@ -115,4 +119,14 @@ func (r *repo) contexts(userID int) []*Context {
 		panic(err)
 	}
 	return contexts
+}
+
+func (r *repo) dropGoalActions(goalID int) {
+	_, err := r.tx.Model(&Action{}).
+		Set("dropped_at = ?", time.Now()).
+		Where("goal_id = ?", goalID).
+		Update()
+	if err != nil {
+		panic(err)
+	}
 }

@@ -46,8 +46,10 @@ type LocaleActionSuggestion struct {
 	Doing                 string
 	Skip                  string
 	ItIsDone              string
+	TrashGoal             string
 	BackToInbox           string
 	Skipping              string
+	GoalTrashed           string
 }
 
 type LocaleDoing struct {
@@ -130,8 +132,10 @@ var En = Locale{
 		"Yes, I'll do this.",
 		"Skip this one for now.",
 		"It is already done.",
+		"Trash this goal.",
 		"Done working for now.",
 		"OK, skipping for now...",
+		"OK, goal trashed.",
 	},
 	LocaleDoing{
 		"Great! Waiting for you to finish.",
