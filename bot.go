@@ -23,6 +23,8 @@ func RunBot(db *pg.DB) {
 		log.Printf("Authorized on account %s", bot.Self.UserName)
 	}
 
+	resetUserState(bot, db)
+
 	var updates telegram.UpdatesChannel
 
 	if webhookURL := os.Getenv("WEBHOOK_URL"); webhookURL != "" {

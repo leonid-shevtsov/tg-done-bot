@@ -188,3 +188,14 @@ func (r *repo) dropGoalActionsAndWaitingFors(goalID int) {
 		panic(err)
 	}
 }
+
+func (r *repo) usersInDirtyState() []*User {
+	var users []*User
+	err := r.tx.Model(&users).
+		Where("active_question != ?", questionCollectingInbox).
+		Select()
+	if err != nil {
+		panic(err)
+	}
+	return users
+}

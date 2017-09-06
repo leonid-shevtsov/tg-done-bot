@@ -93,6 +93,7 @@ type LocaleProcessing struct {
 type LocaleMessages struct {
 	PickOneOfTheOptions string
 	GoalTrashed         string
+	ServerRestart       string
 }
 
 type LocaleCommands struct {
@@ -198,6 +199,7 @@ var En = Locale{
 	LocaleMessages{
 		"Please pick one of the options.",
 		"OK, goal trashed.",
+		"Goooood morning! I've got restarted.",
 	},
 	LocaleCommands{
 		"Yes",
