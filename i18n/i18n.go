@@ -44,6 +44,7 @@ type LocaleActionSuggestion struct {
 	Prompt      string
 	Doing       string
 	Skip        string
+	ItIsDone    string
 	BackToInbox string
 	Skipping    string
 }
@@ -126,6 +127,7 @@ var En = Locale{
 		"I think you should do this now:",
 		"Yes, I'll do this.",
 		"Skip this one for now.",
+		"It is already done.",
 		"Done working for now.",
 		"OK, skipping for now...",
 	},

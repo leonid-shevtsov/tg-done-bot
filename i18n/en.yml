@@ -24,6 +24,7 @@ en:
     doing: "Yes, I'll do this."
     skip: "Skip this one for now."
     # defer: "Defer until later."
+    it_is_done: "It is already done."
     back_to_inbox: "Done working for now."
     skipping: "OK, skipping for now..."
   doing:
