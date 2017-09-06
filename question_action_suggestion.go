@@ -9,7 +9,9 @@ func init() {
 func askActionSuggestion(i *interaction) {
 	if actionToDo := i.state.actionToDo(); actionToDo != nil {
 		i.state.setSuggestedAction(actionToDo)
-		i.sendMessage(i.locale.ActionSuggestion.Prompt)
+		i.sendMessage(i.locale.ActionSuggestion.IThinkYouShouldWorkOn)
+		i.sendMessage(actionToDo.Goal.Text)
+		i.sendMessage(i.locale.ActionSuggestion.ByDoing)
 		i.sendPrompt(actionToDo.Text, [][]string{{
 			i.locale.ActionSuggestion.Doing,
 			i.locale.ActionSuggestion.Skip,

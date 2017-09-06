@@ -41,12 +41,13 @@ type LocaleDoItNow struct {
 }
 
 type LocaleActionSuggestion struct {
-	Prompt      string
-	Doing       string
-	Skip        string
-	ItIsDone    string
-	BackToInbox string
-	Skipping    string
+	IThinkYouShouldWorkOn string
+	ByDoing               string
+	Doing                 string
+	Skip                  string
+	ItIsDone              string
+	BackToInbox           string
+	Skipping              string
 }
 
 type LocaleDoing struct {
@@ -124,7 +125,8 @@ var En = Locale{
 		"Do it! 2 minutes and counting.",
 	},
 	LocaleActionSuggestion{
-		"I think you should do this now:",
+		"I think you should work on:",
+		"by doing:",
 		"Yes, I'll do this.",
 		"Skip this one for now.",
 		"It is already done.",

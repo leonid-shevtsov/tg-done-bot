@@ -29,7 +29,7 @@ func (r *repo) finalizeTransaction() {
 func (r *repo) findUser(userID int) *User {
 	user := &User{ID: userID}
 	_, err := r.tx.Model(user).
-		Column("user.*", "CurrentInboxItem", "CurrentGoal", "CurrentAction").
+		Column("user.*", "CurrentInboxItem", "CurrentGoal", "CurrentAction", "CurrentAction.Goal").
 		SelectOrInsert()
 	if err != nil {
 		panic(err)
@@ -91,9 +91,10 @@ func (r *repo) actionCount(userID int) int {
 func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
 	err := r.tx.Model(&actionsToDo).
-		Where("user_id = ? AND completed_at IS NULL", userID).
+		Where("action.user_id = ? AND action.completed_at IS NULL", userID).
 		Order("reviewed_at ASC").
 		Limit(1).
+		Column("action.*", "Goal").
 		Select()
 	if err != nil {
 		panic(err)

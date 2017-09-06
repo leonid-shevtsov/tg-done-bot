@@ -20,7 +20,8 @@ en:
   do_it_now:
     prompt: "Do it! 2 minutes and counting."
   action_suggestion:
-    prompt: "I think you should do this now:"
+    i_think_you_should_work_on: "I think you should work on:"
+    by_doing: "by doing:"
     doing: "Yes, I'll do this."
     skip: "Skip this one for now."
     # defer: "Defer until later."
