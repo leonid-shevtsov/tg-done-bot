@@ -66,9 +66,9 @@ func parseDateInput(input string) (time.Time, error) {
 	if len(matches) == 0 {
 		return time.Now(), errors.New("bad string")
 	}
-	year, _ := strconv.Atoi(matches[0][0])
-	month, _ := strconv.Atoi(matches[0][1])
-	day, _ := strconv.Atoi(matches[0][2])
+	year, _ := strconv.Atoi(matches[0][1])
+	month, _ := strconv.Atoi(matches[0][2])
+	day, _ := strconv.Atoi(matches[0][3])
 	return time.Date(year, time.Month(month), day, 23, 59, 59, 0, time.UTC), nil
 }
 
