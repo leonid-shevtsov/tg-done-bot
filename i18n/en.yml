@@ -13,6 +13,14 @@ en:
     no_trash_it: "No - trash it"
   what_is_the_goal:
     prompt: "What is the goal here?"
+  what_is_the_due_date:
+    prompt: "What is the due date?"
+    none: "None"
+    today: "Today"
+    tomorrow: "Tomorrow"
+    end_of_week: "End of week"
+    format_help: "Please enter date in YYYY-MM-DD format, or pick one of the options"
+    success: "Due date is now: %s"
   what_is_the_next_action:
     prompt: "What is the next physical action?"
     waiting_for: "I am blocked (waiting)"

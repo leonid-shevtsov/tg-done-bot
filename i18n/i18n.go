@@ -28,6 +28,16 @@ type LocaleWhatIsTheGoal struct {
 	Prompt string
 }
 
+type LocaleWhatIsTheDueDate struct {
+	Prompt     string
+	None       string
+	Today      string
+	Tomorrow   string
+	EndOfWeek  string
+	FormatHelp string
+	Success    string
+}
+
 type LocaleWhatIsTheNextAction struct {
 	Prompt     string
 	WaitingFor string
@@ -110,6 +120,7 @@ type Locale struct {
 	CollectingInbox         LocaleCollectingInbox
 	IsItActionable          LocaleIsItActionable
 	WhatIsTheGoal           LocaleWhatIsTheGoal
+	WhatIsTheDueDate        LocaleWhatIsTheDueDate
 	WhatIsTheNextAction     LocaleWhatIsTheNextAction
 	WhatAreYouWaitingFor    LocaleWhatAreYouWaitingFor
 	CanYouDoItNow           LocaleCanYouDoItNow
@@ -141,6 +152,15 @@ var En = Locale{
 	},
 	LocaleWhatIsTheGoal{
 		"What is the goal here?",
+	},
+	LocaleWhatIsTheDueDate{
+		"What is the due date?",
+		"None",
+		"Today",
+		"Tomorrow",
+		"End of week",
+		"Please enter date in YYYY-MM-DD format, or pick one of the options",
+		"Due date is now: %s",
 	},
 	LocaleWhatIsTheNextAction{
 		"What is the next physical action?",

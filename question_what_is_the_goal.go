@@ -21,6 +21,6 @@ func handleWhatIsTheGoal(i *interaction) string {
 		return endProcessingByAborting(i)
 	default:
 		i.state.createGoalAndMakeCurrent(i.message.Text)
-		return questionWhatIsTheNextAction
+		return questionWhatIsTheDueDate
 	}
 }

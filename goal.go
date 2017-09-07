@@ -13,6 +13,7 @@ type Goal struct {
 	CreatedAt   time.Time `sql:",notnull"`
 	CompletedAt time.Time
 	DroppedAt   time.Time
+	DueAt       time.Time
 
 	User        *User
 	Actions     []*Action

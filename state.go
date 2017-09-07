@@ -80,6 +80,11 @@ func (s *state) createGoalAndMakeCurrent(text string) {
 	s.repo.update(s.user)
 }
 
+func (s *state) setGoalDue(date time.Time) {
+	s.user.CurrentGoal.DueAt = date
+	s.repo.update(s.user.CurrentGoal)
+}
+
 func (s *state) createActionAndMakeCurrent(text string) {
 	action := &Action{
 		UserID: s.user.ID,
