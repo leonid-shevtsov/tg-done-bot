@@ -52,8 +52,7 @@ func handleWhatIsTheDueDate(i *interaction) string {
 
 func setDueDate(i *interaction, date time.Time) string {
 	i.state.setGoalDue(date)
-	dateString := date.Format("2006-01-02")
-	i.sendMessage(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, dateString))
+	i.sendMessage(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, i.dueString(date)))
 	return questionWhatIsTheNextAction
 }
 

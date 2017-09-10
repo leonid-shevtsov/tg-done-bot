@@ -10,9 +10,9 @@ func askCheckWaitingFor(i *interaction) {
 	if waitingFor := i.state.waitingForToCheck(); waitingFor != nil {
 		i.state.setCurrentWaitingFor(waitingFor)
 		i.sendMessage(i.locale.CheckWaitingFor.YourGoal)
-		i.sendMessage(waitingFor.Goal.Text)
+		i.sendGoal(waitingFor.Goal)
 		i.sendMessage(i.locale.CheckWaitingFor.IsWaitingFor)
-		i.sendPrompt(waitingFor.Text, [][]string{
+		i.sendBoldPrompt(waitingFor.Text, [][]string{
 			{i.locale.CheckWaitingFor.ItIsReady},
 			{i.locale.CheckWaitingFor.StillWaiting},
 			{i.locale.Commands.TrashGoal},

@@ -104,6 +104,13 @@ type LocaleMessages struct {
 	PickOneOfTheOptions string
 	GoalTrashed         string
 	ServerRestart       string
+	Due                 string
+}
+
+type LocaleDate struct {
+	Today    string
+	Tomorrow string
+	Late     string
 }
 
 type LocaleCommands struct {
@@ -132,6 +139,7 @@ type Locale struct {
 	WhatIsTheGoalWaitingFor LocaleWhatIsTheGoalWaitingFor
 	Processing              LocaleProcessing
 	Messages                LocaleMessages
+	Date                    LocaleDate
 	Commands                LocaleCommands
 }
 
@@ -220,6 +228,12 @@ var En = Locale{
 		"Please pick one of the options.",
 		"OK, goal trashed.",
 		"Goooood morning! I've got restarted.",
+		"due",
+	},
+	LocaleDate{
+		"today",
+		"tomorrow",
+		"late",
 	},
 	LocaleCommands{
 		"Yes",

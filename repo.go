@@ -80,6 +80,10 @@ func (r *repo) userActionScope(userID int) *orm.Query {
 // }
 
 func (r *repo) userWaitingForScope(userID int) *orm.Query {
+	// TODO
+	// either goal is not due today or tomorrow, and not reviewed today
+	// OR goal is due today or tomorrow, and not reviewed in the last hour
+
 	return r.tx.Model(&WaitingFor{}).
 		Where(`waiting_for.user_id = ?
 			AND waiting_for.completed_at IS NULL
@@ -130,9 +134,14 @@ func (r *repo) inboxItemToProcess(userID int) *InboxItem {
 func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
 	err := r.userActionScope(userID).
-		Order("reviewed_at ASC").
 		Limit(1).
 		Column("action.*", "Goal").
+		OrderExpr(`CASE
+				WHEN goal.due_at < current_timestamp + interval '2 days' THEN 1
+				WHEN goal.due_at IS NULL AND goal.created_at < current_timestamp - interval '14 days' THEN 2
+				WHEN goal.due_at IS NOT NULL THEN 3
+				ELSE 4
+			END ASC, reviewed_at ASC`).
 		Select(&actionsToDo)
 	if err != nil {
 		panic(err)

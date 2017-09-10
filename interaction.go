@@ -50,32 +50,3 @@ func (i *interaction) runQuestions() {
 	i.state.setActiveQuestion(nextQuestionKey)
 	nextQuestion.ask(i)
 }
-
-func (i *interaction) sendMessage(messageText string) {
-	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
-	msg.ReplyMarkup = telegram.ReplyKeyboardRemove{RemoveKeyboard: true}
-	i.bot.Send(msg)
-}
-
-func (i *interaction) sendPrompt(messageText string, keyboard [][]string) {
-	var telegramKeyboard [][]telegram.KeyboardButton
-	for _, row := range keyboard {
-		var telegramRow []telegram.KeyboardButton
-		for _, buttonText := range row {
-			telegramRow = append(telegramRow, telegram.KeyboardButton{Text: buttonText})
-		}
-		telegramKeyboard = append(telegramKeyboard, telegramRow)
-	}
-
-	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
-	msg.ReplyMarkup = telegram.ReplyKeyboardMarkup{
-		Keyboard:       telegramKeyboard,
-		ResizeKeyboard: true,
-	}
-	i.bot.Send(msg)
-}
-
-func (i *interaction) sendUnclear() {
-	msg := telegram.NewMessage(int64(i.state.userID()), i.locale.Messages.PickOneOfTheOptions)
-	i.bot.Send(msg)
-}
