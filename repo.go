@@ -136,12 +136,13 @@ func (r *repo) actionToDo(userID int) *Action {
 	err := r.userActionScope(userID).
 		Limit(1).
 		Column("action.*", "Goal").
+		// FIXME removed these categories of goals:
+		// WHEN goal.due_at IS NULL AND goal.created_at < current_timestamp - interval '14 days' THEN 2
+		// WHEN goal.due_at IS NOT NULL THEN 3
 		OrderExpr(`CASE
 				WHEN goal.due_at < current_timestamp + interval '2 days' THEN 1
-				WHEN goal.due_at IS NULL AND goal.created_at < current_timestamp - interval '14 days' THEN 2
-				WHEN goal.due_at IS NOT NULL THEN 3
 				ELSE 4
-			END ASC, reviewed_at ASC`).
+			END ASC, action.reviewed_at ASC`).
 		Select(&actionsToDo)
 	if err != nil {
 		panic(err)
