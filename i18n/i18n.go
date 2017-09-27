@@ -115,7 +115,8 @@ type LocaleReviewGoalChangeStatement struct {
 }
 
 type LocaleReviewGoalDueDate struct {
-	Prompt string
+	Prompt       string
+	PromptNoDate string
 }
 
 type LocaleReviewGoalChangeDueDate struct {
@@ -266,6 +267,7 @@ var En = Locale{
 	},
 	LocaleReviewGoalDueDate{
 		"Is the current due date still in effect?",
+		"Is this goal still without a due date?",
 	},
 	LocaleReviewGoalChangeDueDate{
 		"What is the current due date?",

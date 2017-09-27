@@ -7,7 +7,13 @@ func init() {
 }
 
 func askReviewGoalDueDate(i *interaction) {
-	i.sendPrompt(i.locale.ReviewGoalDueDate.Prompt, [][]string{
+	var prompt string
+	if i.state.user.CurrentGoal.DueAt.IsZero() {
+		prompt = i.locale.ReviewGoalDueDate.PromptNoDate
+	} else {
+		prompt = i.locale.ReviewGoalDueDate.Prompt
+	}
+	i.sendPrompt(prompt, [][]string{
 		{
 			i.locale.Commands.Yes,
 			i.locale.Commands.No,

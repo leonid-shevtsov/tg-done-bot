@@ -75,6 +75,7 @@ en:
     prompt: "What is the current goal statement?"
   review_goal_due_date:
     prompt: "Is the current due date still in effect?"
+    prompt_no_date: "Is this goal still without a due date?"
   review_goal_change_due_date:
     prompt: "What is the current due date?"
     cleared: "Due date is now cleared"
