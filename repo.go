@@ -76,8 +76,13 @@ func (r *repo) userActionScope(userID int) *orm.Query {
 			AND action.reviewed_at < current_timestamp - interval '10 minutes'`, userID)
 }
 
-// func (r *repo) userGoalScope(userID int) *orm.Query {
-// }
+func (r *repo) userGoalToReviewScope(userID int) *orm.Query {
+	return r.tx.Model(&Goal{}).
+		Where(`goal.user_id = ?
+			AND goal.completed_at IS NULL
+			AND goal.dropped_at IS NULL
+			AND goal.reviewed_at < current_timestamp - interval '1 week'`, userID)
+}
 
 func (r *repo) userWaitingForScope(userID int) *orm.Query {
 	// TODO
@@ -109,6 +114,14 @@ func (r *repo) actionCount(userID int) int {
 
 func (r *repo) waitingForCount(userID int) int {
 	count, err := r.userWaitingForScope(userID).Count()
+	if err != nil {
+		panic(err)
+	}
+	return count
+}
+
+func (r *repo) goalToReviewCount(userID int) int {
+	count, err := r.userGoalToReviewScope(userID).Count()
 	if err != nil {
 		panic(err)
 	}
@@ -167,6 +180,22 @@ func (r *repo) waitingForToCheck(userID int) *WaitingFor {
 	if len(waitingForsToCheck) > 0 {
 		actionToDo := waitingForsToCheck[0]
 		return &actionToDo
+	}
+	return nil
+}
+
+func (r *repo) goalToReview(userID int) *Goal {
+	var goalsToReview []Goal
+	err := r.userGoalToReviewScope(userID).
+		Order("reviewed_at ASC").
+		Limit(1).
+		Select(&goalsToReview)
+	if err != nil {
+		panic(err)
+	}
+	if len(goalsToReview) > 0 {
+		goalToReview := goalsToReview[0]
+		return &goalToReview
 	}
 	return nil
 }

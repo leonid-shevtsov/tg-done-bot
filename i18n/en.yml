@@ -8,7 +8,7 @@ en:
       other: "Added to inbox. Now in inbox: %d items."
   is_it_actionable:
     processing_inbox_item: "Processing inbox item:"
-    prompt: "Is it actionable?"
+    prompt: "Does this require action in the next one or two weeks?"
     trashed: "Trashed! Moving on."
     no_trash_it: "No - trash it"
   what_is_the_goal:
@@ -65,6 +65,19 @@ en:
     aborted:
       one: "OK. %d inbox item left to process."
       other: "OK. %d inbox items left to process."
+  review_goal:
+    lets_review_this_goal: "Let's review this goal:"
+    prompt: "Is this something you are going to work on in the upcoming week?"
+    success: "Goal is reviewed and up-to-date."
+  review_goal_statement:
+    prompt: "Is the goal statement still relevant?"
+  review_goal_change_statement:
+    prompt: "What is the current goal statement?"
+  review_goal_due_date:
+    prompt: "Is the current due date still in effect?"
+  review_goal_change_due_date:
+    prompt: "What is the current due date?"
+    cleared: "Due date is now cleared"
   messages:
     pick_one_of_the_options: "Please pick one of the options."
     goal_trashed: "OK, goal trashed."
@@ -82,3 +95,4 @@ en:
     trash_goal: "Trash this goal."
     back_to_inbox: "Done working for now."
     waiting_for: "I am waiting for something"
+    keep: "Keep the current one"

@@ -100,6 +100,29 @@ type LocaleProcessing struct {
 	Aborted func(count int) string
 }
 
+type LocaleReviewGoal struct {
+	LetsReviewThisGoal string
+	Prompt             string
+	Success            string
+}
+
+type LocaleReviewGoalStatement struct {
+	Prompt string
+}
+
+type LocaleReviewGoalChangeStatement struct {
+	Prompt string
+}
+
+type LocaleReviewGoalDueDate struct {
+	Prompt string
+}
+
+type LocaleReviewGoalChangeDueDate struct {
+	Prompt  string
+	Cleared string
+}
+
 type LocaleMessages struct {
 	PickOneOfTheOptions string
 	GoalTrashed         string
@@ -121,26 +144,32 @@ type LocaleCommands struct {
 	TrashGoal   string
 	BackToInbox string
 	WaitingFor  string
+	Keep        string
 }
 
 type Locale struct {
-	CollectingInbox         LocaleCollectingInbox
-	IsItActionable          LocaleIsItActionable
-	WhatIsTheGoal           LocaleWhatIsTheGoal
-	WhatIsTheDueDate        LocaleWhatIsTheDueDate
-	WhatIsTheNextAction     LocaleWhatIsTheNextAction
-	WhatAreYouWaitingFor    LocaleWhatAreYouWaitingFor
-	CanYouDoItNow           LocaleCanYouDoItNow
-	DoItNow                 LocaleDoItNow
-	ActionSuggestion        LocaleActionSuggestion
-	Doing                   LocaleDoing
-	MoveGoalForward         LocaleMoveGoalForward
-	CheckWaitingFor         LocaleCheckWaitingFor
-	WhatIsTheGoalWaitingFor LocaleWhatIsTheGoalWaitingFor
-	Processing              LocaleProcessing
-	Messages                LocaleMessages
-	Date                    LocaleDate
-	Commands                LocaleCommands
+	CollectingInbox           LocaleCollectingInbox
+	IsItActionable            LocaleIsItActionable
+	WhatIsTheGoal             LocaleWhatIsTheGoal
+	WhatIsTheDueDate          LocaleWhatIsTheDueDate
+	WhatIsTheNextAction       LocaleWhatIsTheNextAction
+	WhatAreYouWaitingFor      LocaleWhatAreYouWaitingFor
+	CanYouDoItNow             LocaleCanYouDoItNow
+	DoItNow                   LocaleDoItNow
+	ActionSuggestion          LocaleActionSuggestion
+	Doing                     LocaleDoing
+	MoveGoalForward           LocaleMoveGoalForward
+	CheckWaitingFor           LocaleCheckWaitingFor
+	WhatIsTheGoalWaitingFor   LocaleWhatIsTheGoalWaitingFor
+	Processing                LocaleProcessing
+	ReviewGoal                LocaleReviewGoal
+	ReviewGoalStatement       LocaleReviewGoalStatement
+	ReviewGoalChangeStatement LocaleReviewGoalChangeStatement
+	ReviewGoalDueDate         LocaleReviewGoalDueDate
+	ReviewGoalChangeDueDate   LocaleReviewGoalChangeDueDate
+	Messages                  LocaleMessages
+	Date                      LocaleDate
+	Commands                  LocaleCommands
 }
 
 var En = Locale{
@@ -154,7 +183,7 @@ var En = Locale{
 	},
 	LocaleIsItActionable{
 		"Processing inbox item:",
-		"Is it actionable?",
+		"Does this require action in the next one or two weeks?",
 		"Trashed! Moving on.",
 		"No - trash it",
 	},
@@ -224,6 +253,24 @@ var En = Locale{
 			return pluralize(count, "OK. %d inbox item left to process.", "OK. %d inbox items left to process.")
 		},
 	},
+	LocaleReviewGoal{
+		"Let's review this goal:",
+		"Is this something you are going to work on in the upcoming week?",
+		"Goal is reviewed and up-to-date.",
+	},
+	LocaleReviewGoalStatement{
+		"Is the goal statement still relevant?",
+	},
+	LocaleReviewGoalChangeStatement{
+		"What is the current goal statement?",
+	},
+	LocaleReviewGoalDueDate{
+		"Is the current due date still in effect?",
+	},
+	LocaleReviewGoalChangeDueDate{
+		"What is the current due date?",
+		"Due date is now cleared",
+	},
 	LocaleMessages{
 		"Please pick one of the options.",
 		"OK, goal trashed.",
@@ -243,5 +290,6 @@ var En = Locale{
 		"Trash this goal.",
 		"Done working for now.",
 		"I am waiting for something",
+		"Keep the current one",
 	},
 }

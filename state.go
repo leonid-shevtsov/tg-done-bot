@@ -37,6 +37,10 @@ func (s *state) waitingForCount() int {
 	return s.repo.waitingForCount(s.user.ID)
 }
 
+func (s *state) goalToReviewCount() int {
+	return s.repo.goalToReviewCount(s.user.ID)
+}
+
 func (s *state) inboxItemToProcess() *InboxItem {
 	return s.repo.inboxItemToProcess(s.user.ID)
 }
@@ -54,7 +58,10 @@ func (s *state) setLastMessageNow() {
 }
 
 func (s *state) someWorkToBeDone() bool {
-	return s.inboxCount() > 0 || s.actionCount() > 0 || s.waitingForCount() > 0
+	return s.inboxCount() > 0 ||
+		s.actionCount() > 0 ||
+		s.waitingForCount() > 0 ||
+		s.goalToReviewCount() > 0
 }
 
 func (s *state) addInboxItem(text string) {
@@ -82,6 +89,11 @@ func (s *state) createGoalAndMakeCurrent(text string) {
 
 func (s *state) setGoalDue(date time.Time) {
 	s.user.CurrentGoal.DueAt = date
+	s.repo.update(s.user.CurrentGoal)
+}
+
+func (s *state) setGoalStatement(text string) {
+	s.user.CurrentGoal.Text = text
 	s.repo.update(s.user.CurrentGoal)
 }
 
@@ -130,6 +142,15 @@ func (s *state) waitingForToCheck() *WaitingFor {
 	return s.repo.waitingForToCheck(s.user.ID)
 }
 
+func (s *state) goalToReview() *Goal {
+	return s.repo.goalToReview(s.user.ID)
+}
+
+func (s *state) markGoalReviewed() {
+	s.user.CurrentGoal.ReviewedAt = time.Now()
+	s.repo.update(s.user.CurrentGoal)
+}
+
 func (s *state) setSuggestedAction(action *Action) {
 	s.user.CurrentActionID = action.ID
 	s.user.CurrentGoalID = action.GoalID
@@ -139,6 +160,11 @@ func (s *state) setSuggestedAction(action *Action) {
 func (s *state) setCurrentWaitingFor(waitingFor *WaitingFor) {
 	s.user.CurrentWaitingForID = waitingFor.ID
 	s.user.CurrentGoalID = waitingFor.GoalID
+	s.repo.update(s.user)
+}
+
+func (s *state) setCurrentGoal(goal *Goal) {
+	s.user.CurrentGoalID = goal.ID
 	s.repo.update(s.user)
 }
 

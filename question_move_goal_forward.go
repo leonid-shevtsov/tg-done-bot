@@ -8,7 +8,7 @@ func init() {
 
 func askMoveGoalForward(i *interaction) {
 	i.sendMessage(i.locale.MoveGoalForward.Prompt)
-	i.sendPrompt(i.state.user.CurrentGoal.Text, [][]string{{
+	i.sendBoldPrompt(i.state.user.CurrentGoal.Text, [][]string{{
 		i.locale.MoveGoalForward.GoalIsAchieved,
 		i.locale.Commands.WaitingFor,
 		i.locale.MoveGoalForward.ReviewLater,
