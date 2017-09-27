@@ -45,5 +45,6 @@ func handleReviewGoalDueDate(i *interaction) string {
 func completeGoalReview(i *interaction) string {
 	i.state.markGoalReviewed()
 	i.sendMessage(i.locale.ReviewGoal.Success)
+	i.sendGoal(i.state.user.CurrentGoal)
 	return nextWorkQuestion(i)
 }

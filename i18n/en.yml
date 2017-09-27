@@ -68,7 +68,7 @@ en:
   review_goal:
     lets_review_this_goal: "Let's review this goal:"
     prompt: "Is this something you are going to work on in the upcoming week?"
-    success: "Goal is reviewed and up-to-date."
+    success: "Goal is reviewed and up-to-date:"
   review_goal_statement:
     prompt: "Is the goal statement still relevant?"
   review_goal_change_statement:

@@ -257,7 +257,7 @@ var En = Locale{
 	LocaleReviewGoal{
 		"Let's review this goal:",
 		"Is this something you are going to work on in the upcoming week?",
-		"Goal is reviewed and up-to-date.",
+		"Goal is reviewed and up-to-date:",
 	},
 	LocaleReviewGoalStatement{
 		"Is the goal statement still relevant?",
