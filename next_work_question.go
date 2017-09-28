@@ -5,6 +5,9 @@ func nextWorkQuestion(i *interaction) string {
 		return questionProcessInbox
 	} else if i.state.goalToReviewCount() > 0 {
 		return questionReviewGoal
+	} else if i.state.goalWithNoActionCount() > 0 {
+		i.state.setCurrentGoal(i.state.goalWithNoAction())
+		return questionMoveGoalForward
 	} else if i.state.waitingForCount() > 0 {
 		return questionCheckWaitingFor
 	} else if i.state.actionCount() > 0 {

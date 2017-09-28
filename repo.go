@@ -40,7 +40,8 @@ func (r *repo) findUser(userID int) *User {
 			"CurrentGoal",
 			"CurrentAction",
 			"CurrentAction.Goal",
-			"CurrentWaitingFor").
+			"CurrentWaitingFor",
+			"CurrentWaitingFor.Goal").
 		SelectOrInsert()
 	if err != nil {
 		panic(err)
@@ -76,12 +77,22 @@ func (r *repo) userActionScope(userID int) *orm.Query {
 			AND action.reviewed_at < current_timestamp - interval '10 minutes'`, userID)
 }
 
-func (r *repo) userGoalToReviewScope(userID int) *orm.Query {
+func (r *repo) userActiveGoalScope(userID int) *orm.Query {
 	return r.tx.Model(&Goal{}).
 		Where(`goal.user_id = ?
 			AND goal.completed_at IS NULL
-			AND goal.dropped_at IS NULL
-			AND goal.reviewed_at < current_timestamp - interval '1 week'`, userID)
+			AND goal.dropped_at IS NULL`, userID)
+}
+
+func (r *repo) userGoalToReviewScope(userID int) *orm.Query {
+	return r.userActiveGoalScope(userID).
+		Where(`goal.reviewed_at < current_timestamp - interval '1 week'`)
+}
+
+func (r *repo) userGoalWithNoActionScope(userID int) *orm.Query {
+	return r.userActiveGoalScope(userID).
+		Join("LEFT JOIN actions ON actions.goal_id = goal.id AND actions.completed_at IS NULL AND actions.dropped_at IS NULL").
+		Where("actions.id IS NULL")
 }
 
 func (r *repo) userWaitingForScope(userID int) *orm.Query {
@@ -96,32 +107,8 @@ func (r *repo) userWaitingForScope(userID int) *orm.Query {
 			AND waiting_for.reviewed_at < current_timestamp - interval '1 day'`, userID)
 }
 
-func (r *repo) inboxCount(userID int) int {
-	count, err := r.userInboxItemScope(userID).Count()
-	if err != nil {
-		panic(err)
-	}
-	return count
-}
-
-func (r *repo) actionCount(userID int) int {
-	count, err := r.userActionScope(userID).Count()
-	if err != nil {
-		panic(err)
-	}
-	return count
-}
-
-func (r *repo) waitingForCount(userID int) int {
-	count, err := r.userWaitingForScope(userID).Count()
-	if err != nil {
-		panic(err)
-	}
-	return count
-}
-
-func (r *repo) goalToReviewCount(userID int) int {
-	count, err := r.userGoalToReviewScope(userID).Count()
+func (r *repo) count(query *orm.Query) int {
+	count, err := query.Count()
 	if err != nil {
 		panic(err)
 	}
@@ -196,6 +183,21 @@ func (r *repo) goalToReview(userID int) *Goal {
 	if len(goalsToReview) > 0 {
 		goalToReview := goalsToReview[0]
 		return &goalToReview
+	}
+	return nil
+}
+
+func (r *repo) goalWithNoAction(userID int) *Goal {
+	var goalsWithoutActions []Goal
+	err := r.userGoalWithNoActionScope(userID).
+		Limit(1).
+		Select(&goalsWithoutActions)
+	if err != nil {
+		panic(err)
+	}
+	if len(goalsWithoutActions) > 0 {
+		goalWithNoAction := goalsWithoutActions[0]
+		return &goalWithNoAction
 	}
 	return nil
 }

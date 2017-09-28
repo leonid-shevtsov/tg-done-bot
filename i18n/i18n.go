@@ -74,9 +74,7 @@ type LocaleDoing struct {
 type LocaleMoveGoalForward struct {
 	Prompt                  string
 	GoalIsAchieved          string
-	ReviewLater             string
 	CongratulationsComplete string
-	WillReviewLater         string
 	AddedAction             string
 }
 
@@ -230,9 +228,7 @@ var En = Locale{
 	LocaleMoveGoalForward{
 		"What is the next action towards this goal?",
 		"This goal is achieved",
-		"Let's review it later",
 		"Congratulations on succeeding!",
-		"OK, marked goal for review.",
 		"OK, recorded next action for this goal.",
 	},
 	LocaleCheckWaitingFor{

@@ -45,9 +45,7 @@ en:
   move_goal_forward:
     prompt: "What is the next action towards this goal?"
     goal_is_achieved: "This goal is achieved"
-    review_later: "Let's review it later"
     congratulations_complete: "Congratulations on succeeding!"
-    will_review_later: "OK, marked goal for review."
     added_action: "OK, recorded next action for this goal."
   check_waiting_for:
     your_goal: "Your goal:"

@@ -26,19 +26,23 @@ func (s *state) userID() int {
 }
 
 func (s *state) inboxCount() int {
-	return s.repo.inboxCount(s.user.ID)
+	return s.repo.count(s.repo.userInboxItemScope(s.user.ID))
 }
 
 func (s *state) actionCount() int {
-	return s.repo.actionCount(s.user.ID)
+	return s.repo.count(s.repo.userActionScope(s.user.ID))
 }
 
 func (s *state) waitingForCount() int {
-	return s.repo.waitingForCount(s.user.ID)
+	return s.repo.count(s.repo.userWaitingForScope(s.user.ID))
 }
 
 func (s *state) goalToReviewCount() int {
-	return s.repo.goalToReviewCount(s.user.ID)
+	return s.repo.count(s.repo.userGoalToReviewScope(s.user.ID))
+}
+
+func (s *state) goalWithNoActionCount() int {
+	return s.repo.count(s.repo.userGoalWithNoActionScope(s.user.ID))
 }
 
 func (s *state) inboxItemToProcess() *InboxItem {
@@ -61,7 +65,8 @@ func (s *state) someWorkToBeDone() bool {
 	return s.inboxCount() > 0 ||
 		s.actionCount() > 0 ||
 		s.waitingForCount() > 0 ||
-		s.goalToReviewCount() > 0
+		s.goalToReviewCount() > 0 ||
+		s.goalWithNoActionCount() > 0
 }
 
 func (s *state) addInboxItem(text string) {
@@ -152,8 +157,8 @@ func (s *state) markGoalReviewed() {
 }
 
 func (s *state) setSuggestedAction(action *Action) {
-	s.user.CurrentActionID = action.ID
-	s.user.CurrentGoalID = action.GoalID
+	s.user.CurrentAction = action
+	s.user.CurrentGoal = action.Goal
 	s.repo.update(s.user)
 }
 
@@ -164,7 +169,7 @@ func (s *state) setCurrentWaitingFor(waitingFor *WaitingFor) {
 }
 
 func (s *state) setCurrentGoal(goal *Goal) {
-	s.user.CurrentGoalID = goal.ID
+	s.user.CurrentGoal = goal
 	s.repo.update(s.user)
 }
 
@@ -202,4 +207,8 @@ func (s *state) dropCurrentGoal() {
 func (s *state) dropCurrentAction() {
 	s.user.CurrentAction.DroppedAt = time.Now()
 	s.repo.update(s.user.CurrentAction)
+}
+
+func (s *state) goalWithNoAction() *Goal {
+	return s.repo.goalWithNoAction(s.user.ID)
 }
