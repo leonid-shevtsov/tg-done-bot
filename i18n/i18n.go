@@ -134,10 +134,11 @@ type LocaleStatusUpdate struct {
 }
 
 type LocaleMessages struct {
-	PickOneOfTheOptions string
-	GoalTrashed         string
-	ServerRestart       string
-	Due                 string
+	PickOneOfTheOptions   string
+	GoalTrashed           string
+	ServerRestart         string
+	BackToCollectingInbox string
+	Due                   string
 }
 
 type LocaleDate struct {
@@ -295,6 +296,7 @@ var En = Locale{
 		"Please pick one of the options.",
 		"OK, goal trashed.",
 		"Goooood morning! I've got restarted.",
+		"Let's continue later.",
 		"due",
 	},
 	LocaleDate{

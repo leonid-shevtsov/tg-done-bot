@@ -35,5 +35,6 @@ func sendDailyUpdates(bot *telegram.BotAPI, db *pg.DB) {
 		}
 		message := strings.Join(messageLines, "\n")
 		i.sendHTMLMessage(message)
+		askCollectingInbox(i)
 	}
 }

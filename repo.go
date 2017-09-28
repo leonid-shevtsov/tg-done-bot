@@ -247,11 +247,13 @@ func (r *repo) dropGoalActionsAndWaitingFors(goalID int) {
 	}
 }
 
+func (r *repo) dirtyStateScope() *orm.Query {
+	return r.tx.Model(&User{}).Where("active_question != ?", questionCollectingInbox)
+}
+
 func (r *repo) usersInDirtyState() []*User {
 	var users []*User
-	err := r.tx.Model(&users).
-		Where("active_question != ?", questionCollectingInbox).
-		Select()
+	err := r.dirtyStateScope().Select(&users)
 	if err != nil {
 		panic(err)
 	}
@@ -261,6 +263,25 @@ func (r *repo) usersInDirtyState() []*User {
 func (r *repo) usersForDailyUpdate() []*User {
 	var users []*User
 	err := r.tx.Model(&users).Select()
+	if err != nil {
+		panic(err)
+	}
+	return users
+}
+
+func (r *repo) earliestDirtyActivityTime() time.Time {
+	var result time.Time
+	r.dirtyStateScope().
+		Order("last_message_at ASC").
+		Limit(1).
+		Column("last_message_at").
+		Select(&result)
+	return result
+}
+
+func (r *repo) usersDirtySince(time time.Time) []*User {
+	var users []*User
+	err := r.dirtyStateScope().Where("last_message_at <= ?", time).Select(&users)
 	if err != nil {
 		panic(err)
 	}

@@ -21,10 +21,11 @@ func RunBot(db *pg.DB) {
 	if os.Getenv("DEBUG") != "" {
 		bot.Debug = true
 		log.Printf("Authorized on account %s", bot.Self.UserName)
+		resetUserState(bot, db)
 	}
 
-	resetUserState(bot, db)
 	go dailyUpdates(bot, db)
+	go resetWhenInactive(bot, db)
 
 	var updates telegram.UpdatesChannel
 

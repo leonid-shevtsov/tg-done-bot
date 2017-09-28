@@ -90,6 +90,7 @@ en:
     pick_one_of_the_options: "Please pick one of the options."
     goal_trashed: "OK, goal trashed."
     server_restart: "Goooood morning! I've got restarted."
+    back_to_collecting_inbox: "Let's continue later."
     due: "due"
   date:
     today: today
