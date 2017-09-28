@@ -25,6 +25,10 @@ func (s *state) userID() int {
 	return s.user.ID
 }
 
+func (s *state) goalCount() int {
+	return s.repo.count(s.repo.userActiveGoalScope(s.user.ID))
+}
+
 func (s *state) inboxCount() int {
 	return s.repo.count(s.repo.userInboxItemScope(s.user.ID))
 }
@@ -214,4 +218,16 @@ func (s *state) dropCurrentAction() {
 
 func (s *state) goalWithNoAction() *Goal {
 	return s.repo.goalWithNoAction(s.user.ID)
+}
+
+func (s *state) inboxItemsProcessedTodayCount() int {
+	return s.repo.count(s.repo.inboxItemsProcessedTodayScope(s.user.ID))
+}
+
+func (s *state) goalsCreatedTodayCount() int {
+	return s.repo.count(s.repo.goalsCreatedTodayScope(s.user.ID))
+}
+
+func (s *state) actionsCompletedTodayCount() int {
+	return s.repo.count(s.repo.actionsCompletedTodayScope(s.user.ID))
 }

@@ -77,6 +77,15 @@ en:
   review_goal_change_due_date:
     prompt: "What is the current due date?"
     cleared: "Due date is now cleared"
+  status_update:
+    title: "Status update"
+    goals_total: "Total goals"
+    actions_total: "Active goals"
+    waiting_for_total: "Waiting goals"
+    inbox_items_processed_today: "Inbox items processed today"
+    goals_created_today: "Goals added today"
+    actions_completed_today: "Actions completed today"
+    inbox_items_count: "Items still in inbox"
   messages:
     pick_one_of_the_options: "Please pick one of the options."
     goal_trashed: "OK, goal trashed."

@@ -24,6 +24,7 @@ func RunBot(db *pg.DB) {
 	}
 
 	resetUserState(bot, db)
+	go dailyUpdates(bot, db)
 
 	var updates telegram.UpdatesChannel
 

@@ -122,6 +122,17 @@ type LocaleReviewGoalChangeDueDate struct {
 	Cleared string
 }
 
+type LocaleStatusUpdate struct {
+	Title                    string
+	GoalsTotal               string
+	ActionsTotal             string
+	WaitingForTotal          string
+	InboxItemsProcessedToday string
+	GoalsCreatedToday        string
+	ActionsCompletedToday    string
+	InboxItemsCount          string
+}
+
 type LocaleMessages struct {
 	PickOneOfTheOptions string
 	GoalTrashed         string
@@ -166,6 +177,7 @@ type Locale struct {
 	ReviewGoalChangeStatement LocaleReviewGoalChangeStatement
 	ReviewGoalDueDate         LocaleReviewGoalDueDate
 	ReviewGoalChangeDueDate   LocaleReviewGoalChangeDueDate
+	StatusUpdate              LocaleStatusUpdate
 	Messages                  LocaleMessages
 	Date                      LocaleDate
 	Commands                  LocaleCommands
@@ -268,6 +280,16 @@ var En = Locale{
 	LocaleReviewGoalChangeDueDate{
 		"What is the current due date?",
 		"Due date is now cleared",
+	},
+	LocaleStatusUpdate{
+		"Status update",
+		"Total goals",
+		"Active goals",
+		"Waiting goals",
+		"Inbox items processed today",
+		"Goals added today",
+		"Actions completed today",
+		"Items still in inbox",
 	},
 	LocaleMessages{
 		"Please pick one of the options.",

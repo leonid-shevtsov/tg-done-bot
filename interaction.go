@@ -14,6 +14,11 @@ type interaction struct {
 	locale  *i18n.Locale
 }
 
+func initiateInteraction(bot *telegram.BotAPI, repo *repo, userID int) *interaction {
+	state := newState(repo, userID)
+	return &interaction{state: state, bot: bot, message: nil, locale: &i18n.En}
+}
+
 func handleMessage(bot *telegram.BotAPI, message *telegram.Message, db *pg.DB) {
 	repo := newRepo(db)
 	defer repo.finalizeTransaction()
@@ -21,7 +26,6 @@ func handleMessage(bot *telegram.BotAPI, message *telegram.Message, db *pg.DB) {
 	state := newState(repo, message.From.ID)
 	interaction := interaction{state: state, bot: bot, message: message, locale: &i18n.En}
 	interaction.state.setLastMessageNow()
-	// TODO perhaps show welcome text if it is a new user
 	// TODO someday, check user payment status, or else
 	interaction.runQuestions()
 }

@@ -69,6 +69,23 @@ func (r *repo) userInboxItemScope(userID int) *orm.Query {
 			AND processed_at IS NULL`, userID)
 }
 
+func (r *repo) inboxItemsProcessedTodayScope(userID int) *orm.Query {
+	return r.tx.Model(&InboxItem{}).
+		Where(`user_id = ?
+			AND processed_at > current_timestamp - interval '1 day'`, userID)
+}
+
+func (r *repo) actionsCompletedTodayScope(userID int) *orm.Query {
+	return r.tx.Model(&Action{}).
+		Where(`user_id = ?
+			AND completed_at > current_timestamp - interval '1 day'`, userID)
+}
+
+func (r *repo) goalsCreatedTodayScope(userID int) *orm.Query {
+	return r.userActiveGoalScope(userID).
+		Where("created_at > current_timestamp - interval '1 day'")
+}
+
 func (r *repo) userActionScope(userID int) *orm.Query {
 	return r.tx.Model(&Action{}).
 		Where(`action.user_id = ?
@@ -235,6 +252,15 @@ func (r *repo) usersInDirtyState() []*User {
 	err := r.tx.Model(&users).
 		Where("active_question != ?", questionCollectingInbox).
 		Select()
+	if err != nil {
+		panic(err)
+	}
+	return users
+}
+
+func (r *repo) usersForDailyUpdate() []*User {
+	var users []*User
+	err := r.tx.Model(&users).Select()
 	if err != nil {
 		panic(err)
 	}

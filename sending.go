@@ -35,6 +35,12 @@ func (i *interaction) makeBoldMessage(messageText string) *telegram.MessageConfi
 	return &msg
 }
 
+func (i *interaction) sendHTMLMessage(messageText string) {
+	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
+	msg.ParseMode = telegram.ModeHTML
+	i.bot.Send(&msg)
+}
+
 func escapeForHTMLFormatting(msg string) string {
 	return strings.Replace(
 		strings.Replace(
