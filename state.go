@@ -158,7 +158,9 @@ func (s *state) markGoalReviewed() {
 
 func (s *state) setSuggestedAction(action *Action) {
 	s.user.CurrentAction = action
+	s.user.CurrentActionID = action.ID
 	s.user.CurrentGoal = action.Goal
+	s.user.CurrentGoalID = action.GoalID
 	s.repo.update(s.user)
 }
 
@@ -170,6 +172,7 @@ func (s *state) setCurrentWaitingFor(waitingFor *WaitingFor) {
 
 func (s *state) setCurrentGoal(goal *Goal) {
 	s.user.CurrentGoal = goal
+	s.user.CurrentGoalID = goal.ID
 	s.repo.update(s.user)
 }
 
