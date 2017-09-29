@@ -11,7 +11,7 @@ func askIsItActionable(i *interaction) {
 	if inboxItemToProcess := i.state.inboxItemToProcess(); inboxItemToProcess != nil {
 		i.state.startProcessing(inboxItemToProcess)
 		i.sendMessage(i.locale.IsItActionable.ProcessingInboxItem)
-		i.sendMessage(inboxItemToProcess.Text)
+		i.sendBoldMessage(inboxItemToProcess.Text)
 		i.sendPrompt(i.locale.IsItActionable.Prompt, [][]string{{
 			i.locale.Commands.Yes,
 			i.locale.IsItActionable.NoTrashIt,

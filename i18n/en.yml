@@ -38,7 +38,15 @@ en:
     skip: "Skip this one for now."
     change_next_action: "Let's set another next action."
     it_is_done: "It is already done."
+    wrong_context: "I'm not in the context."
+    context_now_inactive: "OK, won't suggest actions from this context for now."
+    need_context: "Need a context."
     skipping: "OK, skipping for now..."
+  create_context:
+    prompt: "What is the new context's name?"
+    cancel: "Let's not create a new context"
+    already_exists: "This context already exists."
+    success: "Context created and assigned to action."
   doing:
     prompt: "Great! Waiting for you to finish."
     completed: "Awesome!"
@@ -96,6 +104,12 @@ en:
     today: today
     tomorrow: tomorrow
     late: late
+  what_is_the_context:
+    prompt: "What is the right context for this action?"
+    none: "Any"
+    new_context: "Create context"
+    success: "Context assigned."
+    marking_inactive: "Marking context inactive for now."
   commands:
     "yes": "Yes"
     "no": "No"

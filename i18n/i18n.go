@@ -63,7 +63,17 @@ type LocaleActionSuggestion struct {
 	Skip                  string
 	ChangeNextAction      string
 	ItIsDone              string
+	WrongContext          string
+	ContextNowInactive    string
+	NeedContext           string
 	Skipping              string
+}
+
+type LocaleCreateContext struct {
+	Prompt        string
+	Cancel        string
+	AlreadyExists string
+	Success       string
 }
 
 type LocaleDoing struct {
@@ -147,6 +157,14 @@ type LocaleDate struct {
 	Late     string
 }
 
+type LocaleWhatIsTheContext struct {
+	Prompt          string
+	None            string
+	NewContext      string
+	Success         string
+	MarkingInactive string
+}
+
 type LocaleCommands struct {
 	Yes         string
 	No          string
@@ -168,6 +186,7 @@ type Locale struct {
 	CanYouDoItNow             LocaleCanYouDoItNow
 	DoItNow                   LocaleDoItNow
 	ActionSuggestion          LocaleActionSuggestion
+	CreateContext             LocaleCreateContext
 	Doing                     LocaleDoing
 	MoveGoalForward           LocaleMoveGoalForward
 	CheckWaitingFor           LocaleCheckWaitingFor
@@ -181,6 +200,7 @@ type Locale struct {
 	StatusUpdate              LocaleStatusUpdate
 	Messages                  LocaleMessages
 	Date                      LocaleDate
+	WhatIsTheContext          LocaleWhatIsTheContext
 	Commands                  LocaleCommands
 }
 
@@ -232,7 +252,16 @@ var En = Locale{
 		"Skip this one for now.",
 		"Let's set another next action.",
 		"It is already done.",
+		"I'm not in the context.",
+		"OK, won't suggest actions from this context for now.",
+		"Need a context.",
 		"OK, skipping for now...",
+	},
+	LocaleCreateContext{
+		"What is the new context's name?",
+		"Let's not create a new context",
+		"This context already exists.",
+		"Context created and assigned to action.",
 	},
 	LocaleDoing{
 		"Great! Waiting for you to finish.",
@@ -303,6 +332,13 @@ var En = Locale{
 		"today",
 		"tomorrow",
 		"late",
+	},
+	LocaleWhatIsTheContext{
+		"What is the right context for this action?",
+		"Any",
+		"Create context",
+		"Context assigned.",
+		"Marking context inactive for now.",
 	},
 	LocaleCommands{
 		"Yes",

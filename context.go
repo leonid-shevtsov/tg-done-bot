@@ -11,6 +11,8 @@ type Context struct {
 	UserID    int       `sql:",notnull"`
 	Text      string    `sql:",notnull"`
 	CreatedAt time.Time `sql:",notnull"`
+	Active    bool      `sql:",notnull"`
+	DroppedAt time.Time
 
 	Actions []*Action
 }

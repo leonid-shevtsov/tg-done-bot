@@ -12,14 +12,29 @@ func askActionSuggestion(i *interaction) {
 		i.sendMessage(i.locale.ActionSuggestion.IThinkYouShouldWorkOn)
 		i.sendGoal(actionToDo.Goal)
 		i.sendMessage(i.locale.ActionSuggestion.ByDoing)
-		i.sendBoldPrompt(actionToDo.Text, [][]string{
-			{i.locale.ActionSuggestion.Doing},
-			{i.locale.ActionSuggestion.Skip},
-			{i.locale.ActionSuggestion.ItIsDone},
-			{i.locale.ActionSuggestion.ChangeNextAction},
-			{i.locale.Commands.WaitingFor},
-			{i.locale.Commands.TrashGoal},
-			{i.locale.Commands.BackToInbox},
+
+		var contextAction string
+		if actionToDo.ContextID != 0 {
+			contextAction = i.locale.ActionSuggestion.WrongContext
+		} else {
+			contextAction = i.locale.ActionSuggestion.NeedContext
+		}
+
+		i.sendActionPrompt(actionToDo, [][]string{
+			{
+				i.locale.ActionSuggestion.Doing,
+				i.locale.ActionSuggestion.Skip,
+				i.locale.ActionSuggestion.ItIsDone,
+			},
+			{
+				i.locale.ActionSuggestion.ChangeNextAction,
+				i.locale.Commands.WaitingFor,
+				contextAction,
+			},
+			{
+				i.locale.Commands.TrashGoal,
+				i.locale.Commands.BackToInbox,
+			},
 		})
 	} else {
 		panic("bad precondition for action_suggestion question")
@@ -50,6 +65,12 @@ func handleActionSuggestion(i *interaction) string {
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox
+	case i.locale.ActionSuggestion.WrongContext:
+		i.state.markCurrentContextInactive()
+		i.sendMessage(i.locale.ActionSuggestion.ContextNowInactive)
+		return nextWorkQuestion(i)
+	case i.locale.ActionSuggestion.NeedContext:
+		return questionSetActionContext
 	default:
 		return answerUnclear
 	}

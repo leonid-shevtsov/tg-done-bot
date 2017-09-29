@@ -40,6 +40,7 @@ func (r *repo) findUser(userID int) *User {
 			"CurrentGoal",
 			"CurrentAction",
 			"CurrentAction.Goal",
+			"CurrentAction.Context",
 			"CurrentWaitingFor",
 			"CurrentWaitingFor.Goal").
 		SelectOrInsert()
@@ -56,11 +57,9 @@ func (r *repo) update(obj interface{}) {
 	}
 }
 
-func (r *repo) insert(obj interface{}) {
+func (r *repo) insert(obj interface{}) error {
 	_, err := r.tx.Model(obj).Insert()
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
 func (r *repo) userInboxItemScope(userID int) *orm.Query {
@@ -124,6 +123,10 @@ func (r *repo) userWaitingForScope(userID int) *orm.Query {
 			AND waiting_for.reviewed_at < current_timestamp - interval '1 day'`, userID)
 }
 
+func (r *repo) userContextScope(userID int) *orm.Query {
+	return r.tx.Model(&Context{}).Where("user_id = ?", userID)
+}
+
 func (r *repo) count(query *orm.Query) int {
 	count, err := query.Count()
 	if err != nil {
@@ -152,7 +155,7 @@ func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
 	err := r.userActionScope(userID).
 		Limit(1).
-		Column("action.*", "Goal").
+		Column("action.*", "Goal", "Context").
 		// FIXME removed these categories of goals:
 		// WHEN goal.due_at IS NULL AND goal.created_at < current_timestamp - interval '14 days' THEN 2
 		// WHEN goal.due_at IS NOT NULL THEN 3
@@ -221,9 +224,7 @@ func (r *repo) goalWithNoAction(userID int) *Goal {
 
 func (r *repo) contexts(userID int) []*Context {
 	var contexts []*Context
-	err := r.tx.Model(&contexts).
-		Where("user_id=?", userID).
-		Select()
+	err := r.userContextScope(userID).Select(&contexts)
 	if err != nil {
 		panic(err)
 	}
@@ -286,4 +287,17 @@ func (r *repo) usersDirtySince(time time.Time) []*User {
 		panic(err)
 	}
 	return users
+}
+
+func (r *repo) findContextByText(userID int, text string) *Context {
+	var contexts []*Context
+	err := r.userContextScope(userID).Where("text = ?", text).Select(&contexts)
+	if err != nil {
+		panic(err)
+	}
+	if len(contexts) > 0 {
+		return contexts[0]
+	} else {
+		return nil
+	}
 }

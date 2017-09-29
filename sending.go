@@ -24,6 +24,21 @@ func (i *interaction) sendGoal(goal *Goal) {
 	i.bot.Send(msg)
 }
 
+func (i *interaction) makeActionMessage(action *Action) *telegram.MessageConfig {
+	messageText := fmt.Sprintf("<b>%s</b>", escapeForHTMLFormatting(action.Text))
+	if action.ContextID != 0 {
+		contextLabel := fmt.Sprintf(" (<b>@%s</b>)", escapeForHTMLFormatting(action.Context.Text))
+		messageText = messageText + contextLabel
+	}
+	msg := telegram.NewMessage(int64(i.state.userID()), messageText)
+	msg.ParseMode = telegram.ModeHTML
+	return &msg
+}
+
+func (i *interaction) sendAction(action *Action) {
+	i.bot.Send(i.makeActionMessage(action))
+}
+
 func (i *interaction) sendBoldMessage(messageText string) {
 	i.bot.Send(i.makeBoldMessage(messageText))
 }
@@ -58,6 +73,12 @@ func (i *interaction) sendPrompt(messageText string, keyboard [][]string) {
 
 func (i *interaction) sendBoldPrompt(messageText string, keyboard [][]string) {
 	msg := i.makeBoldMessage(messageText)
+	addKeyboardToMessage(msg, keyboard)
+	i.bot.Send(msg)
+}
+
+func (i *interaction) sendActionPrompt(action *Action, keyboard [][]string) {
+	msg := i.makeActionMessage(action)
 	addKeyboardToMessage(msg, keyboard)
 	i.bot.Send(msg)
 }

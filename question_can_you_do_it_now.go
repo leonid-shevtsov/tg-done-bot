@@ -18,7 +18,7 @@ func handleCanYouDoItNow(i *interaction) string {
 	case i.locale.Commands.Yes:
 		return questionDoItNow
 	case i.locale.Commands.No:
-		return nextWorkQuestion(i)
+		return questionProcessingWhatIsTheContext
 	default:
 		return answerUnclear
 	}

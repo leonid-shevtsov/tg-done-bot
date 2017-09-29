@@ -231,3 +231,38 @@ func (s *state) goalsCreatedTodayCount() int {
 func (s *state) actionsCompletedTodayCount() int {
 	return s.repo.count(s.repo.actionsCompletedTodayScope(s.user.ID))
 }
+
+func (s *state) markCurrentContextInactive() {
+	s.user.CurrentAction.Context.Active = false
+	s.repo.update(s.user.CurrentAction.Context)
+}
+
+func (s *state) allContexts() []*Context {
+	return s.repo.contexts(s.user.ID)
+}
+
+func (s *state) setCurrentActionContext(context *Context) {
+	s.user.CurrentAction.Context = context
+	if context != nil {
+		s.user.CurrentAction.ContextID = context.ID
+	} else {
+		s.user.CurrentAction.ContextID = 0
+	}
+	s.repo.update(s.user.CurrentAction)
+}
+
+func (s *state) findContextByText(text string) *Context {
+	return s.repo.findContextByText(s.user.ID, text)
+}
+
+func (s *state) createContext(text string) (*Context, error) {
+	context := Context{
+		UserID: s.user.ID,
+		Text:   text,
+	}
+	err := s.repo.insert(&context)
+	if err != nil {
+		return nil, err
+	}
+	return &context, nil
+}
