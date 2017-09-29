@@ -17,6 +17,7 @@ func askCollectingInbox(i *interaction) {
 func handleCollectingInbox(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.CollectingInbox.StartWorking:
+		i.state.makeAllContextsActive()
 		return nextWorkQuestion(i)
 	default:
 		i.state.addInboxItem(i.message.Text)

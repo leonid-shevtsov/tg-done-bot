@@ -93,6 +93,13 @@ func (r *repo) userActionScope(userID int) *orm.Query {
 			AND action.reviewed_at < current_timestamp - interval '10 minutes'`, userID)
 }
 
+func (r *repo) userActionToDoScope(userID int) *orm.Query {
+	return r.userActionScope(userID).
+		Where("action.reviewed_at < current_timestamp - interval '10 minutes'").
+		Join("LEFT JOIN contexts ON action.context_id = contexts.id").
+		Where("contexts.id IS NULL OR contexts.active")
+}
+
 func (r *repo) userActiveGoalScope(userID int) *orm.Query {
 	return r.tx.Model(&Goal{}).
 		Where(`goal.user_id = ?
@@ -153,7 +160,7 @@ func (r *repo) inboxItemToProcess(userID int) *InboxItem {
 
 func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
-	err := r.userActionScope(userID).
+	err := r.userActionToDoScope(userID).
 		Limit(1).
 		Column("action.*", "Goal", "Context").
 		// FIXME removed these categories of goals:
@@ -299,5 +306,15 @@ func (r *repo) findContextByText(userID int, text string) *Context {
 		return contexts[0]
 	} else {
 		return nil
+	}
+}
+
+func (r *repo) makeAllContextsActive(userID int) {
+	_, err := r.tx.Model(&Context{Active: true}).
+		Where("user_id = ?", userID).
+		Column("active").
+		Update()
+	if err != nil {
+		panic(err)
 	}
 }

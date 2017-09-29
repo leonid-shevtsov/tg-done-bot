@@ -37,6 +37,10 @@ func (s *state) actionCount() int {
 	return s.repo.count(s.repo.userActionScope(s.user.ID))
 }
 
+func (s *state) actionToDoCount() int {
+	return s.repo.count(s.repo.userActionToDoScope(s.user.ID))
+}
+
 func (s *state) waitingForCount() int {
 	return s.repo.count(s.repo.userWaitingForScope(s.user.ID))
 }
@@ -67,7 +71,7 @@ func (s *state) setLastMessageNow() {
 
 func (s *state) someWorkToBeDone() bool {
 	return s.inboxCount() > 0 ||
-		s.actionCount() > 0 ||
+		s.actionToDoCount() > 0 ||
 		s.waitingForCount() > 0 ||
 		s.goalToReviewCount() > 0 ||
 		s.goalWithNoActionCount() > 0
@@ -265,4 +269,8 @@ func (s *state) createContext(text string) (*Context, error) {
 		return nil, err
 	}
 	return &context, nil
+}
+
+func (s *state) makeAllContextsActive() {
+	s.repo.makeAllContextsActive(s.user.ID)
 }

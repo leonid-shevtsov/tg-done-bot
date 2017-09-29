@@ -10,7 +10,7 @@ func nextWorkQuestion(i *interaction) string {
 		return questionMoveGoalForward
 	} else if i.state.waitingForCount() > 0 {
 		return questionCheckWaitingFor
-	} else if i.state.actionCount() > 0 {
+	} else if i.state.actionToDoCount() > 0 {
 		return questionActionSuggestion
 	} else {
 		i.sendMessage(i.locale.CollectingInbox.NoMoreWork)
