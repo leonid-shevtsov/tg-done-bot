@@ -21,6 +21,7 @@ func handleSetActionContext(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.WhatIsTheContext.None:
 		i.state.setCurrentActionContext(nil)
+		i.sendMessage(i.locale.WhatIsTheContext.Success)
 		return nextWorkQuestion(i)
 	case i.locale.WhatIsTheContext.NewContext:
 		return questionCreateContext
