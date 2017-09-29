@@ -19,9 +19,12 @@ func RunBot(db *pg.DB) {
 	}
 
 	if os.Getenv("DEBUG") != "" {
+		resetUserState(bot, db)
+	}
+
+	if os.Getenv("BOT_DEBUG") != "" {
 		bot.Debug = true
 		log.Printf("Authorized on account %s", bot.Self.UserName)
-		resetUserState(bot, db)
 	}
 
 	go dailyUpdates(bot, db)
