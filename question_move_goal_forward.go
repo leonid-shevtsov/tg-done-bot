@@ -30,6 +30,6 @@ func handleMoveGoalForward(i *interaction) string {
 	default:
 		i.state.createActionAndMakeCurrent(i.message.Text)
 		i.sendMessage(i.locale.MoveGoalForward.AddedAction)
-		return nextWorkQuestion(i)
+		return questionProcessingWhatIsTheContext
 	}
 }
