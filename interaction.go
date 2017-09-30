@@ -1,6 +1,8 @@
 package gtd_bot
 
 import (
+	"strings"
+
 	"leonid.shevtsov.me/gtd_bot/i18n"
 
 	"github.com/go-pg/pg"
@@ -27,7 +29,28 @@ func handleMessage(bot *telegram.BotAPI, message *telegram.Message, db *pg.DB) {
 	interaction := interaction{state: state, bot: bot, message: message, locale: &i18n.En}
 	interaction.state.setLastMessageNow()
 	// TODO someday, check user payment status, or else
-	interaction.runQuestions()
+	if interaction.message.Text[0] == '/' {
+		interaction.runCommands()
+	} else {
+		interaction.runQuestions()
+	}
+}
+
+func (i *interaction) runCommands() {
+	messageParts := strings.Split(i.message.Text, " ")
+	command := messageParts[0]
+	arguments := messageParts[1:]
+	switch command {
+	case "/abort":
+		commandAbort(i, arguments)
+	// case "/inbox":
+	// case "/goals":
+	// case "/actions":
+	// case "/waiting":
+	// case "/contexts":
+	default:
+		i.sendMessage(i.locale.Slash.CommandUnknown)
+	}
 }
 
 const answerUnclear = "answer_unclear"

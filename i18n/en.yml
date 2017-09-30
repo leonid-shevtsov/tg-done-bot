@@ -119,3 +119,5 @@ en:
     back_to_inbox: "Done working for now."
     waiting_for: "I am waiting for something"
     keep: "Keep the current one"
+  slash:
+    command_unknown: "Unknown command"

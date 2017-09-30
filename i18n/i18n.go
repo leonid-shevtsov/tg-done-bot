@@ -176,6 +176,10 @@ type LocaleCommands struct {
 	Keep        string
 }
 
+type LocaleSlash struct {
+	CommandUnknown string
+}
+
 type Locale struct {
 	CollectingInbox           LocaleCollectingInbox
 	IsItActionable            LocaleIsItActionable
@@ -202,6 +206,7 @@ type Locale struct {
 	Date                      LocaleDate
 	WhatIsTheContext          LocaleWhatIsTheContext
 	Commands                  LocaleCommands
+	Slash                     LocaleSlash
 }
 
 var En = Locale{
@@ -349,5 +354,8 @@ var En = Locale{
 		"Done working for now.",
 		"I am waiting for something",
 		"Keep the current one",
+	},
+	LocaleSlash{
+		"Unknown command",
 	},
 }
