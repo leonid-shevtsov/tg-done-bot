@@ -43,7 +43,8 @@ func (i *interaction) runCommands() {
 	switch command {
 	case "/abort":
 		commandAbort(i, arguments)
-	// case "/inbox":
+	case "/inbox":
+		commandInbox(i, arguments)
 	// case "/goals":
 	// case "/actions":
 	// case "/waiting":
