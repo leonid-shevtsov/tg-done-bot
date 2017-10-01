@@ -7,18 +7,13 @@ func init() {
 }
 
 func askReviewGoal(i *interaction) {
-	if goal := i.state.goalToReview(); goal != nil {
-		i.state.setCurrentGoal(goal)
-		i.sendMessage(i.locale.ReviewGoal.LetsReviewThisGoal)
-		i.sendGoal(goal)
-		i.sendPrompt(i.locale.ReviewGoal.Prompt, [][]string{
-			{i.locale.Commands.Yes},
-			{i.locale.Commands.TrashGoal},
-			{i.locale.Commands.BackToInbox},
-		})
-	} else {
-		panic("bad precondition for review_goal question")
-	}
+	i.sendMessage(i.locale.ReviewGoal.LetsReviewThisGoal)
+	i.sendGoal(i.state.user.CurrentGoal)
+	i.sendPrompt(i.locale.ReviewGoal.Prompt, [][]string{
+		{i.locale.Commands.Yes},
+		{i.locale.Commands.TrashGoal},
+		{i.locale.Commands.BackToInbox},
+	})
 }
 
 func handleReviewGoal(i *interaction) string {

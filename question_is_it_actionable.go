@@ -8,18 +8,14 @@ func init() {
 }
 
 func askIsItActionable(i *interaction) {
-	if inboxItemToProcess := i.state.inboxItemToProcess(); inboxItemToProcess != nil {
-		i.state.startProcessing(inboxItemToProcess)
-		i.sendMessage(i.locale.IsItActionable.ProcessingInboxItem)
-		i.sendBoldMessage(inboxItemToProcess.Text)
-		i.sendPrompt(i.locale.IsItActionable.Prompt, [][]string{{
-			i.locale.Commands.Yes,
-			i.locale.IsItActionable.NoTrashIt,
-			i.locale.Processing.Abort,
-		}})
-	} else {
-		panic("bad question prerequisites for is it actionable")
-	}
+	i.state.startProcessing(i.state.user.CurrentInboxItem)
+	i.sendMessage(i.locale.IsItActionable.ProcessingInboxItem)
+	i.sendBoldMessage(i.state.user.CurrentInboxItem.Text)
+	i.sendPrompt(i.locale.IsItActionable.Prompt, [][]string{{
+		i.locale.Commands.Yes,
+		i.locale.IsItActionable.NoTrashIt,
+		i.locale.Processing.Abort,
+	}})
 }
 
 func handleIsItActionable(i *interaction) string {

@@ -7,20 +7,15 @@ func init() {
 }
 
 func askCheckWaitingFor(i *interaction) {
-	if waitingFor := i.state.waitingForToCheck(); waitingFor != nil {
-		i.state.setCurrentWaitingFor(waitingFor)
-		i.sendMessage(i.locale.CheckWaitingFor.YourGoal)
-		i.sendGoal(waitingFor.Goal)
-		i.sendMessage(i.locale.CheckWaitingFor.IsWaitingFor)
-		i.sendBoldPrompt(waitingFor.Text, [][]string{
-			{i.locale.CheckWaitingFor.ItIsReady},
-			{i.locale.CheckWaitingFor.StillWaiting},
-			{i.locale.Commands.TrashGoal},
-			{i.locale.Commands.BackToInbox},
-		})
-	} else {
-		panic("bad precondition for waiting_for_check question")
-	}
+	i.sendMessage(i.locale.CheckWaitingFor.YourGoal)
+	i.sendGoal(i.state.user.CurrentWaitingFor.Goal)
+	i.sendMessage(i.locale.CheckWaitingFor.IsWaitingFor)
+	i.sendBoldPrompt(i.state.user.CurrentWaitingFor.Text, [][]string{
+		{i.locale.CheckWaitingFor.ItIsReady},
+		{i.locale.CheckWaitingFor.StillWaiting},
+		{i.locale.Commands.TrashGoal},
+		{i.locale.Commands.BackToInbox},
+	})
 }
 
 func handleCheckWaitingFor(i *interaction) string {

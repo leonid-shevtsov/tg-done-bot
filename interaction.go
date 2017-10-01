@@ -69,11 +69,14 @@ func (i *interaction) runQuestions() {
 		return
 	}
 
-	nextQuestion := questionMap[nextQuestionKey]
-	if nextQuestion == nil {
+	i.state.setActiveQuestion(nextQuestionKey)
+	i.askActiveQuestion()
+}
+
+func (i *interaction) askActiveQuestion() {
+	activeQuestion := questionMap[i.state.activeQuestion()]
+	if activeQuestion == nil {
 		panic("unhandled next question key")
 	}
-
-	i.state.setActiveQuestion(nextQuestionKey)
-	nextQuestion.ask(i)
+	activeQuestion.ask(i)
 }

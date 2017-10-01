@@ -1,16 +1,20 @@
 package gtd_bot
 
 func nextWorkQuestion(i *interaction) string {
-	if i.state.inboxCount() > 0 {
+	if inboxItemToProcess := i.state.inboxItemToProcess(); inboxItemToProcess != nil {
+		i.state.startProcessing(inboxItemToProcess)
 		return questionProcessInbox
-	} else if i.state.goalToReviewCount() > 0 {
+	} else if goal := i.state.goalToReview(); goal != nil {
+		i.state.setCurrentGoal(goal)
 		return questionReviewGoal
 	} else if i.state.goalWithNoActionCount() > 0 {
 		i.state.setCurrentGoal(i.state.goalWithNoAction())
 		return questionMoveGoalForward
-	} else if i.state.waitingForCount() > 0 {
+	} else if waitingFor := i.state.waitingForToCheck(); waitingFor != nil {
+		i.state.setCurrentWaitingFor(waitingFor)
 		return questionCheckWaitingFor
-	} else if i.state.actionToDoCount() > 0 {
+	} else if actionToDo := i.state.actionToDo(); actionToDo != nil {
+		i.state.setSuggestedAction(actionToDo)
 		return questionActionSuggestion
 	} else {
 		i.sendMessage(i.locale.CollectingInbox.NoMoreWork)
