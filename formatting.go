@@ -39,8 +39,20 @@ func formatAction(action *Action) string {
 	return messageText
 }
 
+func formatContext(context *Context) string {
+	return formatBold(context.Text)
+}
+
 func formatBold(messageText string) string {
 	return fmt.Sprintf("<b>%s</b>", escapeForHTMLFormatting(messageText))
+}
+
+func formatInboxItem(inboxItem *InboxItem) string {
+	return formatBold(inboxItem.Text)
+}
+
+func formatWaitingFor(waitingFor *WaitingFor) string {
+	return formatBold(waitingFor.Text)
 }
 
 func escapeForHTMLFormatting(msg string) string {

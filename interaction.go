@@ -45,10 +45,14 @@ func (i *interaction) runCommands() {
 		commandAbort(i, arguments)
 	case "/inbox":
 		commandInbox(i, arguments)
-	// case "/goals":
-	// case "/actions":
-	// case "/waiting":
-	// case "/contexts":
+	case "/goals":
+		commandGoals(i, arguments)
+	case "/actions":
+		commandActions(i, arguments)
+	case "/waiting":
+		commandWaiting(i, arguments)
+	case "/contexts":
+		commandContexts(i, arguments)
 	default:
 		i.reply().text(i.locale.Slash.CommandUnknown).send()
 	}

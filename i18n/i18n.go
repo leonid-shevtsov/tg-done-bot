@@ -182,6 +182,20 @@ type LocaleCommands struct {
 
 type LocaleSlash struct {
 	CommandUnknown string
+	AllInboxItems  string
+	AllGoals       string
+	AllActions     string
+	AllContexts    string
+	AllWaitingFors string
+	NoInboxItems   string
+	NoGoals        string
+	NoActions      string
+	NoContexts     string
+	NoWaitingFors  string
+}
+
+type LocalePlurals struct {
+	Actions func(count int) string
 }
 
 type Locale struct {
@@ -212,6 +226,7 @@ type Locale struct {
 	WhatIsTheContext          LocaleWhatIsTheContext
 	Commands                  LocaleCommands
 	Slash                     LocaleSlash
+	Plurals                   LocalePlurals
 }
 
 var En = Locale{
@@ -365,5 +380,18 @@ var En = Locale{
 	},
 	LocaleSlash{
 		"Unknown command",
+		"Unprocessed inbox items",
+		"Active goals",
+		"Next actions",
+		"All contexts",
+		"Items you are waiting for",
+		"Inbox zero!",
+		"You have no active goals",
+		"You have no next actions",
+		"You have no contexts",
+		"You are not waiting for any items",
+	},
+	LocalePlurals{
+		func(count int) string { return pluralize(count, "%d action", "%d actions") },
 	},
 }

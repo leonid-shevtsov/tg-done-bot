@@ -41,6 +41,10 @@ func (s *state) actionToDoCount() int {
 	return s.repo.count(s.repo.userActionToDoScope(s.user.ID))
 }
 
+func (s *state) actionInContextCount(context *Context) int {
+	return s.repo.count(s.repo.userActionInContextScope(context.UserID, context.ID))
+}
+
 func (s *state) waitingForCount() int {
 	return s.repo.count(s.repo.userWaitingForScope(s.user.ID))
 }
@@ -243,6 +247,22 @@ func (s *state) markCurrentContextInactive() {
 
 func (s *state) allContexts() []*Context {
 	return s.repo.contexts(s.user.ID)
+}
+
+func (s *state) allGoals() []*Goal {
+	return s.repo.goals(s.user.ID)
+}
+
+func (s *state) allActions() []*Action {
+	return s.repo.actions(s.user.ID)
+}
+
+func (s *state) allWaitingFors() []*WaitingFor {
+	return s.repo.waitingFors(s.user.ID)
+}
+
+func (s *state) allInboxItems() []*InboxItem {
+	return s.repo.inboxItems(s.user.ID)
 }
 
 func (s *state) setCurrentActionContext(context *Context) {

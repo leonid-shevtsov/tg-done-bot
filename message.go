@@ -49,11 +49,11 @@ func (m *message) action(action *Action) *message {
 }
 
 func (m *message) waitingFor(waitingFor *WaitingFor) *message {
-	return m.html(formatBold(waitingFor.Text))
+	return m.html(formatWaitingFor(waitingFor))
 }
 
 func (m *message) inboxItem(inboxItem *InboxItem) *message {
-	return m.html(formatBold(inboxItem.Text))
+	return m.html(formatInboxItem(inboxItem))
 }
 
 func (m *message) boldText(messageText string) *message {

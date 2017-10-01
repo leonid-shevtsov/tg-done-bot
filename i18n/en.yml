@@ -123,3 +123,17 @@ en:
     keep: "Keep the current one"
   slash:
     command_unknown: "Unknown command"
+    all_inbox_items: "Unprocessed inbox items"
+    all_goals: "Active goals"
+    all_actions: "Next actions"
+    all_contexts: "All contexts"
+    all_waiting_fors: "Items you are waiting for"
+    no_inbox_items: "Inbox zero!"
+    no_goals: "You have no active goals"
+    no_actions: "You have no next actions"
+    no_contexts: "You have no contexts"
+    no_waiting_fors: "You are not waiting for any items"
+  plurals:
+    actions:
+      one: "%d action"
+      other: "%d actions"

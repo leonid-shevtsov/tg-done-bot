@@ -87,6 +87,7 @@ func (r *repo) goalsCreatedTodayScope(userID int) *orm.Query {
 
 func (r *repo) userActionScope(userID int) *orm.Query {
 	return r.tx.Model(&Action{}).
+		Column("action.*", "Goal", "Context").
 		Where(`action.user_id = ?
 			AND action.completed_at IS NULL
 			AND action.dropped_at IS NULL
@@ -98,6 +99,10 @@ func (r *repo) userActionToDoScope(userID int) *orm.Query {
 		Where("action.reviewed_at < current_timestamp - interval '10 minutes'").
 		Join("LEFT JOIN contexts ON action.context_id = contexts.id").
 		Where("contexts.id IS NULL OR contexts.active")
+}
+
+func (r *repo) userActionInContextScope(userID int, contextID int) *orm.Query {
+	return r.userActionScope(userID).Where("action.context_id = ?", contextID)
 }
 
 func (r *repo) userActiveGoalScope(userID int) *orm.Query {
@@ -119,11 +124,8 @@ func (r *repo) userGoalWithNoActionScope(userID int) *orm.Query {
 }
 
 func (r *repo) userWaitingForScope(userID int) *orm.Query {
-	// TODO
-	// either goal is not due today or tomorrow, and not reviewed today
-	// OR goal is due today or tomorrow, and not reviewed in the last hour
-
 	return r.tx.Model(&WaitingFor{}).
+		Column("waiting_for.*", "Goal").
 		Where(`waiting_for.user_id = ?
 			AND waiting_for.completed_at IS NULL
 			AND waiting_for.dropped_at IS NULL
@@ -162,7 +164,6 @@ func (r *repo) actionToDo(userID int) *Action {
 	var actionsToDo []Action
 	err := r.userActionToDoScope(userID).
 		Limit(1).
-		Column("action.*", "Goal", "Context").
 		// FIXME removed these categories of goals:
 		// WHEN goal.due_at IS NULL AND goal.created_at < current_timestamp - interval '14 days' THEN 2
 		// WHEN goal.due_at IS NOT NULL THEN 3
@@ -186,7 +187,6 @@ func (r *repo) waitingForToCheck(userID int) *WaitingFor {
 	err := r.userWaitingForScope(userID).
 		Order("reviewed_at ASC").
 		Limit(1).
-		Column("waiting_for.*", "Goal").
 		Select(&waitingForsToCheck)
 	if err != nil {
 		panic(err)
@@ -236,6 +236,42 @@ func (r *repo) contexts(userID int) []*Context {
 		panic(err)
 	}
 	return contexts
+}
+
+func (r *repo) goals(userID int) []*Goal {
+	var goals []*Goal
+	err := r.userActiveGoalScope(userID).Select(&goals)
+	if err != nil {
+		panic(err)
+	}
+	return goals
+}
+
+func (r *repo) inboxItems(userID int) []*InboxItem {
+	var inboxItems []*InboxItem
+	err := r.userInboxItemScope(userID).Select(&inboxItems)
+	if err != nil {
+		panic(err)
+	}
+	return inboxItems
+}
+
+func (r *repo) actions(userID int) []*Action {
+	var actions []*Action
+	err := r.userActionScope(userID).Select(&actions)
+	if err != nil {
+		panic(err)
+	}
+	return actions
+}
+
+func (r *repo) waitingFors(userID int) []*WaitingFor {
+	var waitingFors []*WaitingFor
+	err := r.userWaitingForScope(userID).Select(&waitingFors)
+	if err != nil {
+		panic(err)
+	}
+	return waitingFors
 }
 
 func (r *repo) dropGoalActionsAndWaitingFors(goalID int) {
