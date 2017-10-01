@@ -85,8 +85,9 @@ func (i *interaction) sendActionPrompt(action *Action, keyboard [][]string) {
 
 func addKeyboardToMessage(msg *telegram.MessageConfig, keyboard [][]string) {
 	msg.ReplyMarkup = telegram.ReplyKeyboardMarkup{
-		Keyboard:       makeTelegramKeyboard(keyboard),
-		ResizeKeyboard: true,
+		Keyboard:        makeTelegramKeyboard(keyboard),
+		ResizeKeyboard:  true,
+		OneTimeKeyboard: true,
 	}
 }
 
