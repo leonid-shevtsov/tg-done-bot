@@ -7,9 +7,9 @@ func init() {
 }
 
 func askWhatIsTheGoalWaitingFor(i *interaction) {
-	i.sendPrompt(i.locale.WhatIsTheGoalWaitingFor.Prompt, [][]string{
+	i.reply().text(i.locale.WhatIsTheGoalWaitingFor.Prompt).keyboard([][]string{
 		{i.locale.WhatIsTheGoalWaitingFor.Nothing},
-	})
+	}).send()
 }
 
 func handleWhatIsTheGoalWaitingFor(i *interaction) string {

@@ -50,7 +50,7 @@ func (i *interaction) runCommands() {
 	// case "/waiting":
 	// case "/contexts":
 	default:
-		i.sendMessage(i.locale.Slash.CommandUnknown)
+		i.reply().text(i.locale.Slash.CommandUnknown).send()
 	}
 }
 

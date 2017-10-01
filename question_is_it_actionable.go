@@ -9,13 +9,13 @@ func init() {
 
 func askIsItActionable(i *interaction) {
 	i.state.startProcessing(i.state.user.CurrentInboxItem)
-	i.sendMessage(i.locale.IsItActionable.ProcessingInboxItem)
-	i.sendBoldMessage(i.state.user.CurrentInboxItem.Text)
-	i.sendPrompt(i.locale.IsItActionable.Prompt, [][]string{{
+	i.sendText(i.locale.IsItActionable.ProcessingInboxItem)
+	i.reply().inboxItem(i.state.user.CurrentInboxItem).send()
+	i.reply().text(i.locale.IsItActionable.Prompt).keyboard([][]string{{
 		i.locale.Commands.Yes,
 		i.locale.IsItActionable.NoTrashIt,
 		i.locale.Processing.Abort,
-	}})
+	}}).send()
 }
 
 func handleIsItActionable(i *interaction) string {

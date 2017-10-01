@@ -21,7 +21,7 @@ func resetAndReturnNextTime(bot *telegram.BotAPI, db *pg.DB) time.Time {
 
 	for _, user := range repo.usersDirtySince(time.Now().Add(-resetTimeout)) {
 		i := initiateInteraction(bot, repo, user.ID)
-		i.sendMessage(i.locale.Messages.BackToCollectingInbox)
+		i.sendText(i.locale.Messages.BackToCollectingInbox)
 		user.ActiveQuestion = questionCollectingInbox
 		repo.update(user)
 		askCollectingInbox(i)

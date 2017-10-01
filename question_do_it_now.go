@@ -7,10 +7,10 @@ func init() {
 }
 
 func askDoItNow(i *interaction) {
-	i.sendPrompt(i.locale.DoItNow.Prompt, [][]string{{
+	i.reply().text(i.locale.DoItNow.Prompt).keyboard([][]string{{
 		i.locale.Commands.Done,
 		i.locale.Commands.DoItLater,
-	}})
+	}}).send()
 	// TODO - notify with timer
 	// go i.setDoItNowTimer(i.user.ID, i.user.CurrentActionID)
 }

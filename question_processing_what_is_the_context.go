@@ -13,14 +13,14 @@ func askProcessingWhatIsTheContext(i *interaction) {
 			i.locale.WhatIsTheContext.NewContext,
 		},
 	}, buildContextKeyboard(i)...)
-	i.sendPrompt(i.locale.WhatIsTheContext.Prompt, fullKeyboard)
+	i.reply().text(i.locale.WhatIsTheContext.Prompt).keyboard(fullKeyboard).send()
 }
 
 func handleProcessingWhatIsTheContext(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.WhatIsTheContext.None:
 		i.state.setCurrentActionContext(nil)
-		i.sendMessage(i.locale.WhatIsTheContext.Success)
+		i.sendText(i.locale.WhatIsTheContext.Success)
 		return nextWorkQuestion(i)
 	case i.locale.WhatIsTheContext.NewContext:
 		return questionProcessingCreateContext
@@ -28,7 +28,7 @@ func handleProcessingWhatIsTheContext(i *interaction) string {
 		context := i.state.findContextByText(i.message.Text)
 		if context != nil {
 			i.state.setCurrentActionContext(context)
-			i.sendMessage(i.locale.WhatIsTheContext.Success)
+			i.sendText(i.locale.WhatIsTheContext.Success)
 			return nextWorkQuestion(i)
 		} else {
 			return answerUnclear

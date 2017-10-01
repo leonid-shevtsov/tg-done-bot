@@ -7,7 +7,7 @@ func init() {
 }
 
 func askReviewGoalStatement(i *interaction) {
-	i.sendPrompt(i.locale.ReviewGoalStatement.Prompt, [][]string{
+	i.reply().text(i.locale.ReviewGoalStatement.Prompt).keyboard([][]string{
 		{
 			i.locale.Commands.Yes,
 			i.locale.Commands.No,
@@ -16,7 +16,7 @@ func askReviewGoalStatement(i *interaction) {
 			i.locale.Commands.TrashGoal,
 			i.locale.Commands.BackToInbox,
 		},
-	})
+	}).send()
 }
 
 func handleReviewGoalStatement(i *interaction) string {
@@ -27,7 +27,7 @@ func handleReviewGoalStatement(i *interaction) string {
 		return questionReviewGoalChangeStatement
 	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.Messages.GoalTrashed)
+		i.sendText(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox

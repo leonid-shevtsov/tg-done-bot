@@ -10,6 +10,10 @@ func pluralize(count int, one string, other string) string {
 	}
 }
 
+type LocaleOnboarding struct {
+	Text string
+}
+
 type LocaleCollectingInbox struct {
 	Prompt       string
 	StartWorking string
@@ -181,6 +185,7 @@ type LocaleSlash struct {
 }
 
 type Locale struct {
+	Onboarding                LocaleOnboarding
 	CollectingInbox           LocaleCollectingInbox
 	IsItActionable            LocaleIsItActionable
 	WhatIsTheGoal             LocaleWhatIsTheGoal
@@ -210,6 +215,9 @@ type Locale struct {
 }
 
 var En = Locale{
+	LocaleOnboarding{
+		"Hello! Onboarding message goes here!",
+	},
 	LocaleCollectingInbox{
 		"Collecting inbox.",
 		"I'm ready for some work",

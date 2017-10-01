@@ -7,11 +7,11 @@ func init() {
 }
 
 func askWhatAreYouWaitingFor(i *interaction) {
-	i.sendPrompt(i.locale.WhatAreYouWaitingFor.Prompt, [][]string{
+	i.reply().text(i.locale.WhatAreYouWaitingFor.Prompt).keyboard([][]string{
 		{i.locale.Processing.TrashIt},
 		{i.locale.WhatAreYouWaitingFor.Nothing},
 		{i.locale.Processing.Abort},
-	})
+	}).send()
 }
 
 func handleWhatAreYouWaitingFor(i *interaction) string {

@@ -13,7 +13,7 @@ func askReviewGoalDueDate(i *interaction) {
 	} else {
 		prompt = i.locale.ReviewGoalDueDate.Prompt
 	}
-	i.sendPrompt(prompt, [][]string{
+	i.reply().text(prompt).keyboard([][]string{
 		{
 			i.locale.Commands.Yes,
 			i.locale.Commands.No,
@@ -22,7 +22,7 @@ func askReviewGoalDueDate(i *interaction) {
 			i.locale.Commands.TrashGoal,
 			i.locale.Commands.BackToInbox,
 		},
-	})
+	}).send()
 }
 
 func handleReviewGoalDueDate(i *interaction) string {
@@ -33,7 +33,7 @@ func handleReviewGoalDueDate(i *interaction) string {
 		return questionReviewGoalChangeDueDate
 	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.Messages.GoalTrashed)
+		i.sendText(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox
@@ -44,7 +44,7 @@ func handleReviewGoalDueDate(i *interaction) string {
 
 func completeGoalReview(i *interaction) string {
 	i.state.markGoalReviewed()
-	i.sendMessage(i.locale.ReviewGoal.Success)
-	i.sendGoal(i.state.user.CurrentGoal)
+	i.sendText(i.locale.ReviewGoal.Success)
+	i.reply().goal(i.state.user.CurrentGoal).send()
 	return nextWorkQuestion(i)
 }

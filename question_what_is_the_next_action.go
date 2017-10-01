@@ -7,11 +7,11 @@ func init() {
 }
 
 func askWhatIsTheNextAction(i *interaction) {
-	i.sendPrompt(i.locale.WhatIsTheNextAction.Prompt, [][]string{
+	i.reply().text(i.locale.WhatIsTheNextAction.Prompt).keyboard([][]string{
 		{i.locale.Processing.TrashIt},
 		{i.locale.WhatIsTheNextAction.WaitingFor},
 		{i.locale.Processing.Abort},
-	})
+	}).send()
 }
 
 func handleWhatIsTheNextAction(i *interaction) string {

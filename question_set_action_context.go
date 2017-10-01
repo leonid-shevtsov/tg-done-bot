@@ -14,14 +14,14 @@ func askSetActionContext(i *interaction) {
 			i.locale.Commands.Keep,
 		},
 	}, buildContextKeyboard(i)...)
-	i.sendPrompt(i.locale.WhatIsTheContext.Prompt, fullKeyboard)
+	i.reply().text(i.locale.WhatIsTheContext.Prompt).keyboard(fullKeyboard).send()
 }
 
 func handleSetActionContext(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.WhatIsTheContext.None:
 		i.state.setCurrentActionContext(nil)
-		i.sendMessage(i.locale.WhatIsTheContext.Success)
+		i.sendText(i.locale.WhatIsTheContext.Success)
 		return nextWorkQuestion(i)
 	case i.locale.WhatIsTheContext.NewContext:
 		return questionCreateContext
@@ -32,8 +32,8 @@ func handleSetActionContext(i *interaction) string {
 		if context != nil {
 			i.state.setCurrentActionContext(context)
 			i.state.markCurrentContextInactive()
-			i.sendMessage(i.locale.WhatIsTheContext.Success)
-			i.sendMessage(i.locale.WhatIsTheContext.MarkingInactive)
+			i.sendText(i.locale.WhatIsTheContext.Success)
+			i.sendText(i.locale.WhatIsTheContext.MarkingInactive)
 			return nextWorkQuestion(i)
 		} else {
 			return answerUnclear

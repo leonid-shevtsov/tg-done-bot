@@ -12,7 +12,7 @@ func init() {
 }
 
 func askWhatIsTheDueDate(i *interaction) {
-	i.sendPrompt(i.locale.WhatIsTheDueDate.Prompt, [][]string{
+	i.reply().text(i.locale.WhatIsTheDueDate.Prompt).keyboard([][]string{
 		{
 			i.locale.WhatIsTheDueDate.None,
 			i.locale.WhatIsTheDueDate.Today,
@@ -22,7 +22,7 @@ func askWhatIsTheDueDate(i *interaction) {
 			i.locale.WhatIsTheDueDate.EndOfWeek,
 		},
 		{i.locale.Processing.TrashIt},
-	})
+	}).send()
 }
 
 func handleWhatIsTheDueDate(i *interaction) string {
@@ -32,12 +32,12 @@ func handleWhatIsTheDueDate(i *interaction) string {
 		case i.locale.Processing.TrashIt:
 			return endProcessingByTrashing(i)
 		default:
-			i.sendMessage(i.locale.WhatIsTheDueDate.FormatHelp)
+			i.sendText(i.locale.WhatIsTheDueDate.FormatHelp)
 			return questionWhatIsTheDueDate
 		}
 	} else if !date.IsZero() {
 		i.state.setGoalDue(date)
-		i.sendMessage(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, i.dueString(date)))
+		i.sendText(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, dueString(i.locale, date)))
 	}
 	return questionWhatIsTheNextAction
 }

@@ -9,7 +9,7 @@ func init() {
 }
 
 func askReviewGoalChangeDueDate(i *interaction) {
-	i.sendPrompt(i.locale.ReviewGoalChangeDueDate.Prompt, [][]string{
+	i.reply().text(i.locale.ReviewGoalChangeDueDate.Prompt).keyboard([][]string{
 		{
 			i.locale.WhatIsTheDueDate.None,
 			i.locale.WhatIsTheDueDate.Today,
@@ -23,7 +23,7 @@ func askReviewGoalChangeDueDate(i *interaction) {
 			i.locale.Commands.TrashGoal,
 			i.locale.Commands.BackToInbox,
 		},
-	})
+	}).send()
 }
 
 func handleReviewGoalChangeDueDate(i *interaction) string {
@@ -34,19 +34,19 @@ func handleReviewGoalChangeDueDate(i *interaction) string {
 			return questionReviewGoalDueDate
 		case i.locale.Commands.TrashGoal:
 			i.state.dropCurrentGoal()
-			i.sendMessage(i.locale.Messages.GoalTrashed)
+			i.sendText(i.locale.Messages.GoalTrashed)
 			return nextWorkQuestion(i)
 		default:
-			i.sendMessage(i.locale.WhatIsTheDueDate.FormatHelp)
+			i.sendText(i.locale.WhatIsTheDueDate.FormatHelp)
 			return questionReviewGoalDueDate
 		}
 	}
 
 	i.state.setGoalDue(date)
 	if !date.IsZero() {
-		i.sendMessage(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, i.dueString(date)))
+		i.sendText(fmt.Sprintf(i.locale.WhatIsTheDueDate.Success, dueString(i.locale, date)))
 	} else {
-		i.sendMessage(i.locale.ReviewGoalChangeDueDate.Cleared)
+		i.sendText(i.locale.ReviewGoalChangeDueDate.Cleared)
 	}
 	return completeGoalReview(i)
 }

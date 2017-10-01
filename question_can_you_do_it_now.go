@@ -7,10 +7,10 @@ func init() {
 }
 
 func askCanYouDoItNow(i *interaction) {
-	i.sendPrompt(i.locale.CanYouDoItNow.Prompt, [][]string{{
+	i.reply().text(i.locale.CanYouDoItNow.Prompt).keyboard([][]string{{
 		i.locale.Commands.Yes,
 		i.locale.Commands.No,
-	}})
+	}}).send()
 }
 
 func handleCanYouDoItNow(i *interaction) string {

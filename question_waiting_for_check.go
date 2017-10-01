@@ -7,30 +7,30 @@ func init() {
 }
 
 func askCheckWaitingFor(i *interaction) {
-	i.sendMessage(i.locale.CheckWaitingFor.YourGoal)
-	i.sendGoal(i.state.user.CurrentWaitingFor.Goal)
-	i.sendMessage(i.locale.CheckWaitingFor.IsWaitingFor)
-	i.sendBoldPrompt(i.state.user.CurrentWaitingFor.Text, [][]string{
+	i.sendText(i.locale.CheckWaitingFor.YourGoal)
+	i.reply().goal(i.state.user.CurrentWaitingFor.Goal).send()
+	i.sendText(i.locale.CheckWaitingFor.IsWaitingFor)
+	i.reply().waitingFor(i.state.user.CurrentWaitingFor).keyboard([][]string{
 		{i.locale.CheckWaitingFor.ItIsReady},
 		{i.locale.CheckWaitingFor.StillWaiting},
 		{i.locale.Commands.TrashGoal},
 		{i.locale.Commands.BackToInbox},
-	})
+	}).send()
 }
 
 func handleCheckWaitingFor(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.CheckWaitingFor.ItIsReady:
 		i.state.completeCurrentWaitingFor()
-		i.sendMessage(i.locale.CheckWaitingFor.Success)
+		i.sendText(i.locale.CheckWaitingFor.Success)
 		return questionMoveGoalForward
 	case i.locale.CheckWaitingFor.StillWaiting:
 		i.state.continueToWait()
-		i.sendMessage(i.locale.CheckWaitingFor.ContinuingToWait)
+		i.sendText(i.locale.CheckWaitingFor.ContinuingToWait)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.Messages.GoalTrashed)
+		i.sendText(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox

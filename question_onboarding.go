@@ -7,6 +7,6 @@ func init() {
 }
 
 func handleOnboarding(i *interaction) string {
-	i.sendMessage("Hello! Onboarding message goes here!")
+	i.sendText(i.locale.Onboarding.Text)
 	return questionCollectingInbox
 }

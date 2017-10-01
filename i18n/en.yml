@@ -1,4 +1,6 @@
 en:
+  onboarding:
+    text: "Hello! Onboarding message goes here!"
   collecting_inbox:
     prompt: "Collecting inbox."
     start_working: "I'm ready for some work"

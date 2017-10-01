@@ -7,9 +7,9 @@ func init() {
 }
 
 func askCreateContext(i *interaction) {
-	i.sendPrompt(i.locale.CreateContext.Prompt, [][]string{
+	i.reply().text(i.locale.CreateContext.Prompt).keyboard([][]string{
 		{i.locale.CreateContext.Cancel},
-	})
+	}).send()
 }
 
 func handleCreateContext(i *interaction) string {
@@ -19,13 +19,13 @@ func handleCreateContext(i *interaction) string {
 	default:
 		context, err := i.state.createContext(i.message.Text)
 		if err != nil {
-			i.sendMessage(i.locale.CreateContext.AlreadyExists)
+			i.sendText(i.locale.CreateContext.AlreadyExists)
 			return questionCreateContext
 		}
 		i.state.setCurrentActionContext(context)
-		i.sendMessage(i.locale.CreateContext.Success)
+		i.sendText(i.locale.CreateContext.Success)
 		i.state.markCurrentContextInactive()
-		i.sendMessage(i.locale.WhatIsTheContext.MarkingInactive)
+		i.sendText(i.locale.WhatIsTheContext.MarkingInactive)
 		return nextWorkQuestion(i)
 	}
 }

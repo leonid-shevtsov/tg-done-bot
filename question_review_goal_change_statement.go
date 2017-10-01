@@ -7,13 +7,13 @@ func init() {
 }
 
 func askReviewGoalChangeStatement(i *interaction) {
-	i.sendPrompt(i.locale.ReviewGoalChangeStatement.Prompt, [][]string{
+	i.reply().text(i.locale.ReviewGoalChangeStatement.Prompt).keyboard([][]string{
 		{
 			i.locale.Commands.Keep,
 			i.locale.Commands.TrashGoal,
 			i.locale.Commands.BackToInbox,
 		},
-	})
+	}).send()
 }
 
 func handleReviewGoalChangeStatement(i *interaction) string {
@@ -22,7 +22,7 @@ func handleReviewGoalChangeStatement(i *interaction) string {
 		return questionReviewGoalDueDate
 	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.Messages.GoalTrashed)
+		i.sendText(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox

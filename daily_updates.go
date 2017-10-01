@@ -34,7 +34,7 @@ func sendDailyUpdates(bot *telegram.BotAPI, db *pg.DB) {
 			fmt.Sprintf("%s: <b>%d</b>", i.locale.StatusUpdate.InboxItemsCount, i.state.inboxCount()),
 		}
 		message := strings.Join(messageLines, "\n")
-		i.sendHTMLMessage(message)
-		askCollectingInbox(i)
+		i.reply().html(message).send()
+		i.askActiveQuestion()
 	}
 }

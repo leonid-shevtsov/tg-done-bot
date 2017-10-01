@@ -17,7 +17,7 @@ func nextWorkQuestion(i *interaction) string {
 		i.state.setSuggestedAction(actionToDo)
 		return questionActionSuggestion
 	} else {
-		i.sendMessage(i.locale.CollectingInbox.NoMoreWork)
+		i.sendText(i.locale.CollectingInbox.NoMoreWork)
 		return questionCollectingInbox
 	}
 }

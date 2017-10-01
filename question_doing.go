@@ -7,17 +7,17 @@ func init() {
 }
 
 func askDoing(i *interaction) {
-	i.sendPrompt(i.locale.Doing.Prompt, [][]string{{
+	i.reply().text(i.locale.Doing.Prompt).keyboard([][]string{{
 		i.locale.Commands.Done,
 		i.locale.Commands.DoItLater,
-	}})
+	}}).send()
 }
 
 func handleDoing(i *interaction) string {
 	switch i.message.Text {
 	case i.locale.Commands.Done:
 		i.state.completeCurrentAction()
-		i.sendMessage(i.locale.Doing.Completed)
+		i.sendText(i.locale.Doing.Completed)
 		return questionMoveGoalForward
 	case i.locale.Commands.DoItLater:
 		i.state.skipCurrentAction()

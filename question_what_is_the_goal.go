@@ -7,10 +7,10 @@ func init() {
 }
 
 func askWhatIsTheGoal(i *interaction) {
-	i.sendPrompt(i.locale.WhatIsTheGoal.Prompt, [][]string{{
+	i.reply().text(i.locale.WhatIsTheGoal.Prompt).keyboard([][]string{{
 		i.locale.Processing.TrashIt,
 		i.locale.Processing.Abort,
-	}})
+	}}).send()
 }
 
 func handleWhatIsTheGoal(i *interaction) string {

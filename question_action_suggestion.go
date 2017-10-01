@@ -7,9 +7,9 @@ func init() {
 }
 
 func askActionSuggestion(i *interaction) {
-	i.sendMessage(i.locale.ActionSuggestion.IThinkYouShouldWorkOn)
-	i.sendGoal(i.state.user.CurrentAction.Goal)
-	i.sendMessage(i.locale.ActionSuggestion.ByDoing)
+	i.sendText(i.locale.ActionSuggestion.IThinkYouShouldWorkOn)
+	i.reply().goal(i.state.user.CurrentAction.Goal).send()
+	i.sendText(i.locale.ActionSuggestion.ByDoing)
 
 	var contextAction string
 	if i.state.user.CurrentAction.ContextID != 0 {
@@ -18,7 +18,7 @@ func askActionSuggestion(i *interaction) {
 		contextAction = i.locale.ActionSuggestion.NeedContext
 	}
 
-	i.sendActionPrompt(i.state.user.CurrentAction, [][]string{
+	i.reply().action(i.state.user.CurrentAction).keyboard([][]string{
 		{
 			i.locale.ActionSuggestion.Doing,
 			i.locale.ActionSuggestion.Skip,
@@ -33,7 +33,7 @@ func askActionSuggestion(i *interaction) {
 			i.locale.Commands.TrashGoal,
 			i.locale.Commands.BackToInbox,
 		},
-	})
+	}).send()
 }
 
 func handleActionSuggestion(i *interaction) string {
@@ -42,11 +42,11 @@ func handleActionSuggestion(i *interaction) string {
 		return questionDoing
 	case i.locale.ActionSuggestion.Skip:
 		i.state.skipCurrentAction()
-		i.sendMessage(i.locale.ActionSuggestion.Skipping)
+		i.sendText(i.locale.ActionSuggestion.Skipping)
 		return nextWorkQuestion(i)
 	case i.locale.ActionSuggestion.ItIsDone:
 		i.state.completeCurrentAction()
-		i.sendMessage(i.locale.Doing.Completed)
+		i.sendText(i.locale.Doing.Completed)
 		return questionMoveGoalForward
 	case i.locale.ActionSuggestion.ChangeNextAction:
 		i.state.dropCurrentAction()
@@ -56,13 +56,13 @@ func handleActionSuggestion(i *interaction) string {
 		return questionWhatIsTheGoalWaitingFor
 	case i.locale.Commands.TrashGoal:
 		i.state.dropCurrentGoal()
-		i.sendMessage(i.locale.Messages.GoalTrashed)
+		i.sendText(i.locale.Messages.GoalTrashed)
 		return nextWorkQuestion(i)
 	case i.locale.Commands.BackToInbox:
 		return questionCollectingInbox
 	case i.locale.ActionSuggestion.WrongContext:
 		i.state.markCurrentContextInactive()
-		i.sendMessage(i.locale.ActionSuggestion.ContextNowInactive)
+		i.sendText(i.locale.ActionSuggestion.ContextNowInactive)
 		return nextWorkQuestion(i)
 	case i.locale.ActionSuggestion.NeedContext:
 		return questionSetActionContext
