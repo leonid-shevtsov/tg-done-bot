@@ -62,8 +62,11 @@ func (s *state) inboxItemToProcess() *InboxItem {
 }
 
 func (s *state) startProcessing(inboxItem *InboxItem) {
+	s.user.CurrentInboxItem = inboxItem
 	s.user.CurrentInboxItemID = inboxItem.ID
+	s.user.CurrentGoal = nil
 	s.user.CurrentGoalID = 0
+	s.user.CurrentAction = nil
 	s.user.CurrentActionID = 0
 	s.repo.update(s.user)
 }
@@ -100,6 +103,7 @@ func (s *state) createGoalAndMakeCurrent(text string) {
 		Text:   text,
 	}
 	s.repo.insert(goal)
+	s.user.CurrentGoal = goal
 	s.user.CurrentGoalID = goal.ID
 	s.repo.update(s.user)
 }
@@ -121,6 +125,7 @@ func (s *state) createActionAndMakeCurrent(text string) {
 		Text:   text,
 	}
 	s.repo.insert(action)
+	s.user.CurrentAction = action
 	s.user.CurrentActionID = action.ID
 	s.repo.update(s.user)
 	if s.user.CurrentInboxItem != nil {
@@ -137,6 +142,7 @@ func (s *state) createWaitingForAndMakeCurrent(text string) {
 		Text:   text,
 	}
 	s.repo.insert(waitingFor)
+	s.user.CurrentWaitingFor = waitingFor
 	s.user.CurrentWaitingForID = waitingFor.ID
 	s.repo.update(s.user)
 	if s.user.CurrentInboxItem != nil {
