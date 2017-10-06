@@ -120,7 +120,8 @@ func (r *repo) userGoalToReviewScope(userID int) *orm.Query {
 func (r *repo) userGoalWithNoActionScope(userID int) *orm.Query {
 	return r.userActiveGoalScope(userID).
 		Join("LEFT JOIN actions ON actions.goal_id = goal.id AND actions.completed_at IS NULL AND actions.dropped_at IS NULL").
-		Where("actions.id IS NULL")
+		Join("LEFT JOIN waiting_fors ON waiting_fors.goal_id = goal.id AND waiting_fors.completed_at IS NULL AND waiting_fors.dropped_at IS NULL").
+		Where("actions.id IS NULL AND waiting_fors.id IS NULL")
 }
 
 func (r *repo) userWaitingForScope(userID int) *orm.Query {
