@@ -183,7 +183,9 @@ func (s *state) setSuggestedAction(action *Action) {
 }
 
 func (s *state) setCurrentWaitingFor(waitingFor *WaitingFor) {
+	s.user.CurrentWaitingFor = waitingFor
 	s.user.CurrentWaitingForID = waitingFor.ID
+	s.user.CurrentGoal = waitingFor.Goal
 	s.user.CurrentGoalID = waitingFor.GoalID
 	s.repo.update(s.user)
 }
