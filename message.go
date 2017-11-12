@@ -61,7 +61,7 @@ func (m *message) boldText(messageText string) *message {
 }
 
 func (m *message) acceptFreeInput() *message {
-	m.telegramMessage.Text += " ✏️" // " ⌨️"
+	m.telegramMessage.Text += " ✏️"
 	return m
 }
 
