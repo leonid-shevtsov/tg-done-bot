@@ -25,7 +25,8 @@ type Action struct {
 func (a *Action) BeforeInsert(db orm.DB) error {
 	if a.CreatedAt.IsZero() {
 		a.CreatedAt = time.Now()
-		a.ReviewedAt = time.Now()
+		// Subtract 10 minutes so action will be available for suggestion immediately
+		a.ReviewedAt = time.Now().Add(-10 * time.Minute)
 	}
 	return nil
 }
