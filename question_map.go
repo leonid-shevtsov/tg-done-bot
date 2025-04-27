@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 type question struct {
 	ask          func(i *interaction)

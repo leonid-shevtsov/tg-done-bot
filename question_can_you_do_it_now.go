@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionCanYouDoItNow = "process_inbox/can_you_do_it_now"
 

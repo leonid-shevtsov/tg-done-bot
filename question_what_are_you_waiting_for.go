@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionWhatAreYouWaitingFor = "process_inbox/waiting_for"
 

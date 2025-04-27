@@ -1,8 +1,8 @@
-package gtd_bot
+package tg_done_bot
 
 import (
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"
-	"leonid.shevtsov.me/gtd_bot/i18n"
+	"github.com/leonid-shevtsov/tg-done-bot/i18n"
 )
 
 type message struct {

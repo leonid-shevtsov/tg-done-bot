@@ -1,11 +1,11 @@
-package gtd_bot
+package tg_done_bot
 
 import (
 	"fmt"
 	"strings"
 	"time"
 
-	"leonid.shevtsov.me/gtd_bot/i18n"
+	"github.com/leonid-shevtsov/tg-done-bot/i18n"
 )
 
 func dueString(locale *i18n.Locale, dueDate time.Time) string {

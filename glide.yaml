@@ -1,8 +1,0 @@
-package: leonid.shevtsov.me/gtd_bot
-import:
-- package: github.com/go-pg/pg
-  version: ~6.4.21
-- package: github.com/go-telegram-bot-api/telegram-bot-api
-- package: github.com/mattes/migrate
-  version: ^3.0.1
-- package: github.com/lib/pq

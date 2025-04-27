@@ -1,7 +1,7 @@
 package main
 
-import "leonid.shevtsov.me/gtd_bot"
+import tg_done_bot "github.com/leonid-shevtsov/tg-done-bot"
 
 func main() {
-	gtd_bot.RunBot(gtd_bot.DBConnect())
+	tg_done_bot.RunBot(tg_done_bot.DBConnect())
 }

@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionCheckWaitingFor = "check_waiting_for"
 

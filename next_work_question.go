@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 func nextWorkQuestion(i *interaction) string {
 	if inboxItemToProcess := i.state.inboxItemToProcess(); inboxItemToProcess != nil {

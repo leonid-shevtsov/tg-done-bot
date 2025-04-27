@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 func buildContextKeyboard(i *interaction) [][]string {
 	contexts := i.state.allContexts()

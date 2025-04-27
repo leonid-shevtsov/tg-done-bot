@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionIsItActionable = "process_inbox/is_it_actionable"
 const questionProcessInbox = questionIsItActionable

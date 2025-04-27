@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionWhatIsTheNextAction = "process_inbox/what_is_the_next_action"
 

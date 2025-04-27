@@ -1,9 +1,9 @@
-package gtd_bot
+package tg_done_bot
 
 import (
 	"strings"
 
-	"leonid.shevtsov.me/gtd_bot/i18n"
+	"github.com/leonid-shevtsov/tg-done-bot/i18n"
 
 	"github.com/go-pg/pg"
 	telegram "github.com/go-telegram-bot-api/telegram-bot-api"

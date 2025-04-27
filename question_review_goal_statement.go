@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 const questionReviewGoalStatement = "review_goal/statement"
 

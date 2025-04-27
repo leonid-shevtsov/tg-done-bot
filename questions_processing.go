@@ -1,4 +1,4 @@
-package gtd_bot
+package tg_done_bot
 
 func endProcessingByTrashing(i *interaction) string {
 	i.state.trashCurrentInboxItem()
